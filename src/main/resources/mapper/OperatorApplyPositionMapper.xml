@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.liyao.bulk.mapper.OperatorApplyPositionMapper">
+
+    <resultMap id="OperatorApplyPositionMap" type="com.liyao.bulk.model.OperatorApplyPosition">
+        <id column="id" property="id"/>
+        <result column="apply_id" property="applyId"/>
+        <result column="position_id" property="positionId"/>
+        <result column="position_name" property="positionName"/>
+    </resultMap>
+
+    <select id="selectByApplyId" resultMap="OperatorApplyPositionMap">
+        SELECT id, apply_id, position_id, position_name
+        FROM operator_apply_position
+        WHERE apply_id = #{applyId}
+    </select>
+
+    <insert id="insertBatch">
+        INSERT INTO operator_apply_position (apply_id, position_id, position_name)
+        VALUES
+        <foreach collection="items" item="item" separator=",">
+            (#{item.applyId}, #{item.positionId}, #{item.positionName})
+        </foreach>
+    </insert>
+</mapper>

@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.liyao.bulk.mapper.PositionApplyMapper">
+
+    <resultMap id="PositionApplyMap" type="com.liyao.bulk.model.PositionApply">
+        <id column="id" property="id"/>
+        <result column="arr_no" property="arrNo"/>
+        <result column="post_id" property="postId"/>
+        <result column="dept_id" property="deptId"/>
+        <result column="dept_name" property="deptName"/>
+        <result column="post_name" property="postName"/>
+        <result column="remark" property="remark"/>
+        <result column="post_type" property="postType"/>
+        <result column="oper_type" property="operType"/>
+        <result column="post_status" property="postStatus"/>
+        <result column="arr_oper_code" property="operCode"/>
+        <result column="arr_oper_name" property="operName"/>
+        <result column="arr_date" property="arrDate"/>
+        <result column="review_oper_code" property="reviewOperCode"/>
+        <result column="review_oper_name" property="reviewOperName"/>
+        <result column="review_time" property="reviewTime"/>
+    </resultMap>
+
+    <select id="selectById" resultMap="PositionApplyMap">
+        SELECT id, arr_no, post_id, dept_id, dept_name, post_name, remark,
+               post_type, oper_type, post_status, arr_oper_code, arr_oper_name,
+               arr_date, review_oper_code, review_oper_name, review_time
+        FROM post_apply
+        WHERE id = #{id}
+    </select>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO post_apply (
+            arr_no, post_id, dept_id, dept_name, post_name, remark,
+            post_type, oper_type, post_status, arr_oper_code, arr_oper_name,
+            arr_date, review_oper_code, review_oper_name, review_time
+        ) VALUES (
+            #{arrNo}, #{postId}, #{deptId}, #{deptName}, #{postName}, #{remark},
+            #{postType}, #{operType}, #{postStatus}, #{operCode}, #{operName},
+            #{arrDate}, #{reviewOperCode}, #{reviewOperName}, #{reviewTime}
+        )
+    </insert>
+
+    <select id="selectByCondition" resultType="com.liyao.bulk.dto.PositionApplySummary">
+        SELECT id,
+               arr_no AS arrNo,
+               post_id AS postId,
+               post_name AS postName,
+               oper_type AS operType,
+               post_status AS postStatus,
+               arr_oper_name AS arrOperName,
+               arr_date AS arrDate,
+               review_oper_name AS reviewOperName,
+               review_oper_code AS reviewOperCode,
+               review_time AS reviewTime
+        FROM post_apply
+        <where>
+            <if test="deptId != null">
+                AND dept_id = #{deptId}
+            </if>
+            <if test="statusList != null and statusList.size() > 0">
+                AND post_status IN
+                <foreach collection="statusList" item="status" open="(" separator="," close=")">
+                    #{status}
+                </foreach>
+            </if>
+            <if test="startTime != null">
+                AND arr_date &gt;= #{startTime}
+            </if>
+            <if test="endTime != null">
+                AND arr_date &lt;= #{endTime}
+            </if>
+            <if test="arrNo != null and arrNo != ''">
+                AND arr_no = #{arrNo}
+            </if>
+            <if test="postName != null and postName != ''">
+                AND post_name LIKE CONCAT('%', #{postName}, '%')
+            </if>
+            <if test="operType != null and operType != ''">
+                AND oper_type = #{operType}
+            </if>
+        </where>
+        ORDER BY arr_date ASC, arr_no ASC
+    </select>
+
+    <update id="updateStatus">
+        UPDATE post_apply
+        SET post_status = #{status},
+            review_oper_code = #{reviewOperCode},
+            review_oper_name = #{reviewOperName},
+            review_time = #{reviewTime}
+        WHERE id = #{id}
+    </update>
+
+    <select id="countPendingByPositionId" resultType="int">
+        SELECT COUNT(1) FROM post_apply
+        WHERE post_id = #{postId} AND post_status = 'PENDING'
+    </select>
+
+    <select id="countPendingByDeptAndName" resultType="int">
+        SELECT COUNT(1) FROM post_apply
+        WHERE dept_id = #{deptId} AND post_name = #{postName} AND post_status = 'PENDING'
+    </select>
+</mapper>
+
+
+

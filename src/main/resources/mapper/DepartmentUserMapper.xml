@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.liyao.bulk.mapper.DepartmentUserMapper">
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO department_user (dept_id, user_id, created_at)
+        VALUES (#{deptId}, #{userId}, #{createdAt})
+    </insert>
+
+    <select id="selectDeptIdByUserId" resultType="long">
+        SELECT dept_id FROM department_user WHERE user_id = #{userId}
+    </select>
+
+    <delete id="deleteByUserId">
+        DELETE FROM department_user WHERE user_id = #{userId}
+    </delete>
+</mapper>

@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.liyao.bulk.mapper.PositionMapper">
+
+    <resultMap id="PositionMap" type="com.liyao.bulk.model.Position">
+        <id column="id" property="id"/>
+        <result column="dept_id" property="deptId"/>
+        <result column="dept_name" property="deptName"/>
+        <result column="post_name" property="postName"/>
+        <result column="post_type" property="postType"/>
+        <result column="remark" property="remark"/>
+        <result column="post_status" property="postStatus"/>
+        <result column="created_oper_name" property="createdOperName"/>
+        <result column="created_at" property="createdAt"/>
+        <result column="updated_oper_name" property="updatedOperName"/>
+        <result column="updated_at" property="updatedAt"/>
+        <result column="review_oper_name" property="reviewOperName"/>
+        <result column="review_time" property="reviewTime"/>
+    </resultMap>
+
+    <select id="selectByCondition" resultMap="PositionMap">
+        SELECT id, dept_id, dept_name, post_name, post_type, remark, post_status,
+               created_oper_name, created_at, updated_oper_name, updated_at,
+               review_oper_name, review_time
+        FROM post
+        <where>
+            <if test="deptId != null">
+                AND dept_id = #{deptId}
+            </if>
+            <if test="name != null and name != ''">
+                AND post_name LIKE CONCAT('%', #{name}, '%')
+            </if>
+            <if test="status != null and status != ''">
+                AND post_status = #{status}
+            </if>
+            <if test="type != null and type != ''">
+                AND post_type = #{type}
+            </if>
+        </where>
+        ORDER BY id ASC
+    </select>
+
+    <select id="selectById" resultMap="PositionMap">
+        SELECT id, dept_id, dept_name, post_name, post_type, remark, post_status,
+               created_oper_name, created_at, updated_oper_name, updated_at,
+               review_oper_name, review_time
+        FROM post
+        WHERE id = #{id}
+    </select>
+
+    <select id="selectByNameInDept" resultMap="PositionMap">
+        SELECT id, dept_id, dept_name, post_name, post_type, remark, post_status,
+               created_oper_name, created_at, updated_oper_name, updated_at,
+               review_oper_name, review_time
+        FROM post
+        WHERE dept_id = #{deptId} AND post_name = #{name}
+        LIMIT 1
+    </select>
+
+    <select id="selectByDeptAndTypeStatus" resultMap="PositionMap">
+        SELECT id, dept_id, dept_name, post_name, post_type, remark, post_status,
+               created_oper_name, created_at, updated_oper_name, updated_at,
+               review_oper_name, review_time
+        FROM post
+        WHERE dept_id = #{deptId} AND post_type = #{type} AND post_status = #{status}
+        ORDER BY id ASC
+    </select>
+
+    <select id="selectByIds" resultMap="PositionMap">
+        SELECT id, dept_id, dept_name, post_name, post_type, remark, post_status,
+               created_oper_name, created_at, updated_oper_name, updated_at,
+               review_oper_name, review_time
+        FROM post
+        WHERE id IN
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </select>
+
+    <select id="selectByUserId" resultMap="PositionMap">
+        SELECT p.id, p.dept_id, p.dept_name, p.post_name, p.post_type, p.remark, p.post_status,
+               p.created_oper_name, p.created_at, p.updated_oper_name, p.updated_at,
+               p.review_oper_name, p.review_time
+        FROM post p
+        INNER JOIN post_user pu ON pu.post_id = p.id
+        WHERE pu.oper_code = #{userId}
+        ORDER BY p.id ASC
+    </select>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO post (dept_id, dept_name, post_name, post_type, remark, post_status,
+                          created_oper_name, created_at, updated_oper_name, updated_at,
+                          review_oper_name, review_time)
+        VALUES (#{deptId}, #{deptName}, #{postName}, #{postType}, #{remark}, #{postStatus},
+                #{createdOperName}, #{createdAt}, #{updatedOperName}, #{updatedAt},
+                #{reviewOperName}, #{reviewTime})
+    </insert>
+
+    <update id="update">
+        UPDATE post
+        SET dept_id = #{deptId},
+            dept_name = #{deptName},
+            post_name = #{postName},
+            post_type = #{postType},
+            remark = #{remark},
+            post_status = #{postStatus},
+            updated_oper_name = #{updatedOperName},
+            updated_at = #{updatedAt},
+            review_oper_name = #{reviewOperName},
+            review_time = #{reviewTime}
+        WHERE id = #{id}
+    </update>
+</mapper>

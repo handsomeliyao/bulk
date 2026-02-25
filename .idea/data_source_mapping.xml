@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DataSourcePerFileMappings">
+    <file url="file://$APPLICATION_CONFIG_DIR$/consoles/db/8665af93-34de-40ac-a6d6-501b41130a68/console.sql" value="8665af93-34de-40ac-a6d6-501b41130a68" />
+    <file url="file://$APPLICATION_CONFIG_DIR$/consoles/db/8665af93-34de-40ac-a6d6-501b41130a68/console_1.sql" value="8665af93-34de-40ac-a6d6-501b41130a68" />
+    <file url="file://$APPLICATION_CONFIG_DIR$/consoles/db/a825b123-0168-4b6b-b91f-764aded12753/console.sql" value="a825b123-0168-4b6b-b91f-764aded12753" />
+    <file url="file://$PROJECT_DIR$/src/main/resources/mapper/AdminApplyMapper.xml" value="8665af93-34de-40ac-a6d6-501b41130a68" />
+    <file url="file://$PROJECT_DIR$/src/main/resources/mapper/DepartmentApplyMapper.xml" value="8665af93-34de-40ac-a6d6-501b41130a68" />
+    <file url="file://$PROJECT_DIR$/src/main/resources/mapper/DepartmentMapper.xml" value="8665af93-34de-40ac-a6d6-501b41130a68" />
+    <file url="file://$PROJECT_DIR$/src/main/resources/mapper/PlatformUserMapper.xml" value="8665af93-34de-40ac-a6d6-501b41130a68" />
+    <file url="file://$PROJECT_DIR$/src/main/resources/sql/sys-menu-data.sql" value="a825b123-0168-4b6b-b91f-764aded12753" />
+  </component>
+</project>

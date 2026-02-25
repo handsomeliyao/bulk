@@ -1,0 +1,33 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.liyao.bulk.mapper.DepartmentScopeMapper">
+
+    <resultMap id="DepartmentScopeMap" type="com.liyao.bulk.model.DepartmentScope">
+        <id column="id" property="id"/>
+        <result column="dept_id" property="deptId"/>
+        <result column="scope_type" property="scopeType"/>
+        <result column="scope_code" property="scopeCode"/>
+        <result column="scope_name" property="scopeName"/>
+        <result column="created_at" property="createdAt"/>
+    </resultMap>
+
+    <select id="selectByDeptId" resultMap="DepartmentScopeMap">
+        SELECT id, dept_id, scope_type, scope_code, scope_name, created_at
+        FROM department_scope
+        WHERE dept_id = #{deptId}
+    </select>
+
+    <insert id="insertBatch">
+        INSERT INTO department_scope (dept_id, scope_type, scope_code, scope_name, created_at)
+        VALUES
+        <foreach collection="scopes" item="item" separator=",">
+            (#{item.deptId}, #{item.scopeType}, #{item.scopeCode}, #{item.scopeName}, #{item.createdAt})
+        </foreach>
+    </insert>
+
+    <delete id="deleteByDeptId">
+        DELETE FROM department_scope WHERE dept_id = #{deptId}
+    </delete>
+</mapper>

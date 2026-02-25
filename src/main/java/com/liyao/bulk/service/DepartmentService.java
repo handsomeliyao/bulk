@@ -1,0 +1,380 @@
+package com.liyao.bulk.service;
+
+import com.liyao.bulk.common.BusinessException;
+import com.liyao.bulk.dto.*;
+import com.liyao.bulk.mapper.DepartmentApplyMapper;
+import com.liyao.bulk.mapper.DepartmentMapper;
+import com.liyao.bulk.mapper.PlatformUserMapper;
+import com.liyao.bulk.model.Department;
+import com.liyao.bulk.model.DepartmentApply;
+import com.liyao.bulk.model.PlatformUser;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
+import java.util.concurrent.ThreadLocalRandom;
+
+@Service
+public class DepartmentService {
+
+    private static final String STATUS_NORMAL = "NORMAL";
+    private static final String STATUS_CANCELED = "CANCELED";
+
+    // 部门申请状态枚举：待复核、复核通过、复核拒绝、已撤销
+    private static final String APPLY_PENDING = "PENDING";
+    private static final String APPLY_APPROVED = "APPROVED";
+    private static final String APPLY_REJECTED = "REJECTED";
+    private static final String APPLY_CANCELED = "CANCELED";
+
+    // 待复核分页可查询状态：待复核、复核通过、复核拒绝、已撤销
+    private static final List<String> DEPARTMENT_PENDING_STATUSES = List.of(
+            APPLY_PENDING,
+            APPLY_APPROVED,
+            APPLY_REJECTED,
+            APPLY_CANCELED
+    );
+
+    private static final String OP_ADD = "ADD";
+    private static final String OP_MODIFY = "MODIFY";
+    private static final String OP_CANCEL = "CANCEL";
+
+    private final DepartmentMapper departmentMapper;
+    private final DepartmentApplyMapper departmentApplyMapper;
+    private final PlatformUserMapper platformUserMapper;
+    private final LoginUserCacheService loginUserCacheService;
+
+    public DepartmentService(DepartmentMapper departmentMapper,
+                             DepartmentApplyMapper departmentApplyMapper,
+                             PlatformUserMapper platformUserMapper,
+                             LoginUserCacheService loginUserCacheService) {
+        this.departmentMapper = departmentMapper;
+        this.departmentApplyMapper = departmentApplyMapper;
+        this.platformUserMapper = platformUserMapper;
+        this.loginUserCacheService = loginUserCacheService;
+    }
+
+    public List<DepartmentSummary> queryDepartments(String name, String status) {
+        List<Department> departments = departmentMapper.selectByCondition(name, status);
+        return departments.stream().map(this::toSummary).toList();
+    }
+
+    public DepartmentDetailResponse getDepartmentDetail(Long id) {
+        Department department = departmentMapper.selectById(id);
+        if (department == null) {
+            throw new BusinessException("Department not found");
+        }
+        DepartmentDetailResponse response = new DepartmentDetailResponse();
+        response.setId(department.getId());
+        response.setDeptName(department.getDeptName());
+        response.setRemark(department.getRemark());
+        response.setDeptStatus(department.getDeptStatus());
+        response.setCreatedOperName(department.getCreatedOperName());
+        response.setCreatedAt(department.getCreatedAt());
+        response.setUpdatedOperName(department.getUpdatedOperName());
+        response.setUpdatedAt(department.getUpdatedAt());
+        response.setReviewOperName(department.getReviewOperName());
+        response.setReviewTime(department.getReviewTime());
+        response.setAuthScopes(Collections.emptyList());
+        response.setOperScopes(Collections.emptyList());
+        return response;
+    }
+
+    public List<UserSummary> queryDepartmentUsers(Long deptId) {
+        List<PlatformUser> users = platformUserMapper.selectByDeptId(deptId);
+        return users.stream().map(this::toUserSummary).toList();
+    }
+
+    @Transactional
+    public void createDepartmentApply(DepartmentCreateRequest request) {
+        validateDepartmentRequest(request.getDeptName());
+        CurrentLoginUser applicant = loginUserCacheService.getRequiredCurrentUser();
+        Department existing = departmentMapper.selectByName(request.getDeptName());
+        if (existing != null) {
+            throw new BusinessException("Department name already exists");
+        }
+        DepartmentApply apply = buildApply(request.getDeptName(), request.getRemark(), applicant.getApplicantDeptId(),
+                STATUS_NORMAL, OP_ADD, applicant);
+        departmentApplyMapper.insert(apply);
+    }
+
+    @Transactional
+    public void modifyDepartmentApply(Long deptId, DepartmentModifyRequest request) {
+        validateDepartmentRequest(request.getDeptName());
+        CurrentLoginUser applicant = loginUserCacheService.getRequiredCurrentUser();
+        Department department = requireDepartment(deptId);
+        if (!STATUS_NORMAL.equals(department.getDeptStatus())) {
+            throw new BusinessException("Department status does not allow modification");
+        }
+        if (departmentApplyMapper.countPendingByDeptId(deptId) > 0) {
+            throw new BusinessException("Pending applications exist");
+        }
+        Department existing = departmentMapper.selectByName(request.getDeptName());
+        if (existing != null && !existing.getId().equals(deptId)) {
+            throw new BusinessException("Department name already exists");
+        }
+        if (!hasDepartmentChanges(department, request)) {
+            throw new BusinessException("No changes to apply");
+        }
+        DepartmentApply apply = buildApply(request.getDeptName(), request.getRemark(), deptId, department.getDeptStatus(), OP_MODIFY, applicant);
+        departmentApplyMapper.insert(apply);
+    }
+
+    @Transactional
+    public void cancelDepartmentApply(Long deptId) {
+        CurrentLoginUser applicant = loginUserCacheService.getRequiredCurrentUser();
+        Department department = requireDepartment(deptId);
+        if (!STATUS_NORMAL.equals(department.getDeptStatus())) {
+            throw new BusinessException("Department status does not allow cancel");
+        }
+        if (departmentApplyMapper.countPendingByDeptId(deptId) > 0) {
+            throw new BusinessException("Pending applications exist");
+        }
+        DepartmentApply apply = new DepartmentApply();
+        apply.setArrNo(generateApplyNo());
+        apply.setDeptId(deptId);
+        apply.setDeptName(department.getDeptName());
+        apply.setRemark(department.getRemark());
+        apply.setOperType(OP_CANCEL);
+        // 申请创建时默认状态：待复核
+        apply.setOperStatus(APPLY_PENDING);
+        apply.setDeptStatus(department.getDeptStatus());
+        fillApplicantInfo(apply, applicant);
+        departmentApplyMapper.insert(apply);
+    }
+
+    public List<DepartmentApplySummary> queryDepartmentApplies(DepartmentApplyQueryRequest request) {
+        List<DepartmentApplySummary> summaries = ApplyQuerySupport.queryAppliesNoDept(
+                request,
+                DepartmentApplyQueryRequest::getStatusType,
+                DepartmentApplyQueryRequest::getStartDate,
+                DepartmentApplyQueryRequest::getEndDate,
+                DepartmentApplyQueryRequest::getArrNo,
+                DepartmentApplyQueryRequest::getDeptName,
+                DepartmentApplyQueryRequest::getOperType,
+                this::resolveApplyStatuses,
+                this::parseStartTime,
+                this::parseEndTime,
+                departmentApplyMapper::selectByCondition);
+        return summaries;
+    }
+
+    @Transactional
+    public void revokeApply(Long applyId) {
+        CurrentLoginUser operator = loginUserCacheService.getRequiredCurrentUser();
+        ApplyRevokeSupport.revokeApply(
+                applyId,
+                operator.getLoginOperCode(),
+                this::requireApply,
+                DepartmentApply::getOperStatus,
+                DepartmentApply::getOperCode,
+                APPLY_PENDING,
+                APPLY_CANCELED,
+                departmentApplyMapper::updateStatus);
+    }
+
+    @Transactional
+    public void reviewApply(DepartmentApplyApproveRequest request) {
+        if (request == null || request.getApplyId() == null) {
+            throw new BusinessException("Apply id is required");
+        }
+        validateDepartmentRequest(request.getDeptName());
+        CurrentLoginUser reviewer = loginUserCacheService.getRequiredCurrentUser();
+        DepartmentApply apply = requireApply(request.getApplyId());
+        if (!APPLY_PENDING.equals(apply.getOperStatus())) {
+            throw new BusinessException("Only pending applies can be reviewed");
+        }
+        if (Objects.equals(apply.getOperCode(), reviewer.getLoginOperCode())) {
+            throw new BusinessException("Cannot review your own apply");
+        }
+        if (!OP_ADD.equals(apply.getOperType())) {
+            throw new BusinessException("Only ADD apply is supported for this review API");
+        }
+        if (!Objects.equals(apply.getDeptName(), request.getDeptName())
+                || !Objects.equals(apply.getRemark(), request.getRemark())) {
+            throw new BusinessException("Review data does not match apply data");
+        }
+
+        Department department = new Department();
+        department.setDeptName(request.getDeptName());
+        department.setRemark(request.getRemark());
+        department.setDeptStatus(apply.getDeptStatus());
+        department.setCreatedOperName(reviewer.getOperName());
+        department.setCreatedAt(LocalDateTime.now());
+        department.setUpdatedOperName(reviewer.getOperName());
+        department.setUpdatedAt(LocalDateTime.now());
+        department.setReviewOperName(reviewer.getOperName());
+        department.setReviewTime(LocalDateTime.now());
+        departmentMapper.insert(department);
+
+        if (department.getId() != null) {
+            departmentApplyMapper.updateDeptId(apply.getId(), department.getId());
+        }
+        departmentApplyMapper.updateStatus(
+                apply.getId(),
+                APPLY_APPROVED,
+                reviewer.getOperCode(),
+                reviewer.getOperName(),
+                LocalDateTime.now(),
+                null
+        );
+    }
+
+    public List<DepartmentExportRow> buildDepartmentExport(String name, String status) {
+        return queryDepartments(name, status).stream().map(item -> {
+            DepartmentExportRow row = new DepartmentExportRow();
+            row.setId(item.getId());
+            row.setDeptName(item.getDeptName());
+            row.setDeptStatus(item.getDeptStatus());
+            row.setRemark(item.getRemark());
+            row.setCreatedOperName(item.getCreatedOperName());
+            row.setCreatedAt(item.getCreatedAt());
+            row.setUpdatedOperName(item.getUpdatedOperName());
+            row.setUpdatedAt(item.getUpdatedAt());
+            row.setReviewOperName(item.getReviewOperName());
+            row.setReviewTime(item.getReviewTime());
+            return row;
+        }).toList();
+    }
+
+    public List<DepartmentApplyExportRow> buildApplyExport(DepartmentApplyQueryRequest request) {
+        return queryDepartmentApplies(request).stream().map(item -> {
+            DepartmentApplyExportRow row = new DepartmentApplyExportRow();
+            row.setArrNo(item.getArrNo());
+            row.setDeptName(item.getDeptName());
+            row.setOperType(item.getOperType());
+            row.setArrStatus(item.getArrStatus());
+            row.setArrOperName(item.getArrOperName());
+            row.setArrDate(item.getArrDate());
+            row.setReviewOperName(item.getReviewOperName());
+            row.setReviewOperCode(item.getReviewOperCode());
+            row.setReviewTime(item.getReviewTime());
+            return row;
+        }).toList();
+    }
+
+
+    private DepartmentApply buildApply(String name, String remark, Long deptId, String deptStatus, String operationType,
+                                       CurrentLoginUser applicant) {
+        DepartmentApply apply = new DepartmentApply();
+        apply.setArrNo(generateApplyNo());
+        apply.setDeptId(deptId);
+        apply.setDeptName(name);
+        apply.setRemark(remark);
+        apply.setOperType(operationType);
+        // 申请创建时默认状态：待复核
+        apply.setOperStatus(APPLY_PENDING);
+        apply.setDeptStatus(deptStatus);
+        fillApplicantInfo(apply, applicant);
+        return apply;
+    }
+
+    private void fillApplicantInfo(DepartmentApply apply, CurrentLoginUser applicant) {
+        apply.setOperCode(applicant.getLoginOperCode());
+        apply.setOperName(applicant.getOperName());
+        apply.setArrDate(LocalDateTime.now());
+    }
+
+    private Department requireDepartment(Long deptId) {
+        Department department = departmentMapper.selectById(deptId);
+        if (department == null) {
+            throw new BusinessException("Department not found");
+        }
+        return department;
+    }
+
+    private DepartmentApply requireApply(Long applyId) {
+        DepartmentApply apply = departmentApplyMapper.selectById(applyId);
+        if (apply == null) {
+            throw new BusinessException("Apply record not found");
+        }
+        return apply;
+    }
+
+    private boolean hasDepartmentChanges(Department department, DepartmentModifyRequest request) {
+        return !Objects.equals(department.getDeptName(), request.getDeptName())
+                || !Objects.equals(department.getRemark(), request.getRemark());
+    }
+
+    private DepartmentSummary toSummary(Department department) {
+        DepartmentSummary summary = new DepartmentSummary();
+        summary.setId(department.getId());
+        summary.setDeptName(department.getDeptName());
+        summary.setRemark(department.getRemark());
+        summary.setDeptStatus(department.getDeptStatus());
+        summary.setCreatedOperName(department.getCreatedOperName());
+        summary.setCreatedAt(department.getCreatedAt());
+        summary.setUpdatedOperName(department.getUpdatedOperName());
+        summary.setUpdatedAt(department.getUpdatedAt());
+        summary.setReviewOperName(department.getReviewOperName());
+        summary.setReviewTime(department.getReviewTime());
+        return summary;
+    }
+
+    private UserSummary toUserSummary(PlatformUser user) {
+        UserSummary summary = new UserSummary();
+        summary.setId(user.getId());
+        summary.setOperCode(user.getOperCode());
+        summary.setOperName(user.getOperName());
+        summary.setOperStatus(user.getOperStatus());
+        summary.setUserType(user.getUserType());
+        summary.setPhone(user.getPhone());
+        return summary;
+    }
+
+    private void validateDepartmentRequest(String name) {
+        if (name == null || name.trim().isEmpty()) {
+            throw new BusinessException("Department name is required");
+        }
+    }
+
+    private List<String> resolveApplyStatuses(String statusType) {
+        // 待复核分页支持状态筛选：PENDING/REJECTED/CANCELED
+        if (statusType == null || statusType.isBlank()) {
+            return DEPARTMENT_PENDING_STATUSES;
+        }
+        if ("PENDING".equalsIgnoreCase(statusType)) {
+            return List.of(APPLY_PENDING);
+        }
+        if ("REJECTED".equalsIgnoreCase(statusType)) {
+            return List.of(APPLY_REJECTED);
+        }
+        if ("APPROVED".equalsIgnoreCase(statusType)) {
+            return List.of(APPLY_APPROVED);
+        }
+        if ("CANCELED".equalsIgnoreCase(statusType)) {
+            return List.of(APPLY_CANCELED);
+        }
+        if ("REVIEWED".equalsIgnoreCase(statusType)) {
+            return List.of(APPLY_APPROVED, APPLY_REJECTED, APPLY_CANCELED);
+        }
+        throw new BusinessException("Invalid apply status type");
+    }
+
+    private LocalDateTime parseStartTime(String startDate) {
+        if (startDate == null || startDate.isBlank()) {
+            return null;
+        }
+        LocalDate date = LocalDate.parse(startDate, DateTimeFormatter.ISO_DATE);
+        return date.atStartOfDay();
+    }
+
+    private LocalDateTime parseEndTime(String endDate) {
+        if (endDate == null || endDate.isBlank()) {
+            return null;
+        }
+        LocalDate date = LocalDate.parse(endDate, DateTimeFormatter.ISO_DATE);
+        return LocalDateTime.of(date, LocalTime.MAX);
+    }
+
+    private String generateApplyNo() {
+        String timestamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmssSSS"));
+        int random = ThreadLocalRandom.current().nextInt(1000, 10000);
+        return timestamp + random;
+    }
+}

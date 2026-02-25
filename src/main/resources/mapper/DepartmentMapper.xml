@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.liyao.bulk.mapper.DepartmentMapper">
+
+    <resultMap id="DepartmentMap" type="com.liyao.bulk.model.Department">
+        <id column="id" property="id"/>
+        <result column="dept_name" property="deptName"/>
+        <result column="remark" property="remark"/>
+        <result column="dept_status" property="deptStatus"/>
+        <result column="created_oper_name" property="createdOperName"/>
+        <result column="created_at" property="createdAt"/>
+        <result column="updated_oper_name" property="updatedOperName"/>
+        <result column="updated_at" property="updatedAt"/>
+        <result column="review_oper_name" property="reviewOperName"/>
+        <result column="review_time" property="reviewTime"/>
+    </resultMap>
+
+    <select id="selectByCondition" resultMap="DepartmentMap">
+        SELECT id, dept_name, remark, dept_status,
+               created_oper_name, created_at, updated_oper_name, updated_at,
+               review_oper_name, review_time
+        FROM department
+        <where>
+            <if test="name != null and name != ''">
+                AND dept_name LIKE CONCAT('%', #{name}, '%')
+            </if>
+            <if test="status != null and status != ''">
+                AND dept_status = #{status}
+            </if>
+        </where>
+        ORDER BY id ASC
+    </select>
+
+    <select id="selectById" resultMap="DepartmentMap">
+        SELECT id, dept_name, remark, dept_status,
+               created_oper_name, created_at, updated_oper_name, updated_at,
+               review_oper_name, review_time
+        FROM department
+        WHERE id = #{id}
+    </select>
+
+    <select id="selectByName" resultMap="DepartmentMap">
+        SELECT id, dept_name, remark, dept_status,
+               created_oper_name, created_at, updated_oper_name, updated_at,
+               review_oper_name, review_time
+        FROM department
+        WHERE dept_name = #{name}
+        LIMIT 1
+    </select>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO department (dept_name, remark, dept_status,
+                                created_oper_name, created_at, updated_oper_name, updated_at,
+                                review_oper_name, review_time)
+        VALUES (#{deptName}, #{remark}, #{deptStatus},
+                #{createdOperName}, #{createdAt}, #{updatedOperName}, #{updatedAt},
+                #{reviewOperName}, #{reviewTime})
+    </insert>
+
+    <update id="update">
+        UPDATE department
+        SET dept_name = #{deptName},
+            remark = #{remark},
+            dept_status = #{deptStatus},
+            updated_oper_name = #{updatedOperName},
+            updated_at = #{updatedAt},
+            review_oper_name = #{reviewOperName},
+            review_time = #{reviewTime}
+        WHERE id = #{id}
+    </update>
+</mapper>

@@ -1,0 +1,47 @@
+﻿server:
+  port: 18889
+  forward-headers-strategy: framework
+
+spring:
+  application:
+    name: bulk
+  datasource:
+    url: jdbc:mysql://52.64.47.53:3306/bulk?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai&useCursorFetch=true&useServerPrepStmts=true&cachePrepStmts=true
+    username: bulk
+    password: Bulk123!@#
+#    password: bulk
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    hikari:
+      data-source-properties:
+        defaultFetchSize: 10000
+  data:
+    redis:
+      database: 0
+      host: bulk.iambeyouare.com
+      port: 6380
+      password: Rs123!@#.
+      ssl:
+        enabled: true
+
+logging:
+  level:
+    root: info
+    org.mybatis: info
+    org.mybatis.spring: info
+    org.apache.ibatis.executor.statement: debug
+    org.apache.ibatis.executor.parameter: debug
+    org.apache.ibatis.executor.resultset: off
+    com.liyao.bulk.mapper: debug
+
+mybatis:
+  mapper-locations: classpath*:mapper/*.xml
+  configuration:
+    map-underscore-to-camel-case: true
+    log-impl: org.apache.ibatis.logging.slf4j.Slf4jImpl
+
+springdoc:
+  api-docs:
+    enabled: true
+  swagger-ui:
+    enabled: true
+    path: /swagger-ui.html

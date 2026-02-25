@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.liyao.bulk.mapper.DepartmentApplyScopeMapper">
+
+    <resultMap id="DepartmentApplyScopeMap" type="com.liyao.bulk.model.DepartmentApplyScope">
+        <id column="id" property="id"/>
+        <result column="apply_id" property="applyId"/>
+        <result column="scope_type" property="scopeType"/>
+        <result column="scope_code" property="scopeCode"/>
+        <result column="scope_name" property="scopeName"/>
+    </resultMap>
+
+    <select id="selectByApplyId" resultMap="DepartmentApplyScopeMap">
+        SELECT id, apply_id, scope_type, scope_code, scope_name
+        FROM department_apply_scope
+        WHERE apply_id = #{applyId}
+    </select>
+
+    <insert id="insertBatch">
+        INSERT INTO department_apply_scope (apply_id, scope_type, scope_code, scope_name)
+        VALUES
+        <foreach collection="scopes" item="item" separator=",">
+            (#{item.applyId}, #{item.scopeType}, #{item.scopeCode}, #{item.scopeName})
+        </foreach>
+    </insert>
+</mapper>

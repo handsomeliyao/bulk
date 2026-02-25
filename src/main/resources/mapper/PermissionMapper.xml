@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.liyao.bulk.mapper.PermissionMapper">
+
+    <resultMap id="SysMenuMap" type="com.liyao.bulk.model.SysMenu">
+        <id column="id" property="id"/>
+        <result column="pid" property="pid"/>
+        <result column="menu_code" property="menuCode"/>
+        <result column="menu_name" property="menuName"/>
+        <result column="menu_order" property="menuOrder"/>
+        <result column="icon" property="icon"/>
+        <result column="url" property="url"/>
+    </resultMap>
+
+    <resultMap id="SysButtonMap" type="com.liyao.bulk.model.SysButton">
+        <id column="id" property="id"/>
+        <result column="menu_id" property="menuId"/>
+        <result column="btn_code" property="btnCode"/>
+        <result column="btn_name" property="btnName"/>
+        <result column="method" property="method"/>
+        <result column="uri" property="uri"/>
+    </resultMap>
+
+    <select id="selectAllMenus" resultMap="SysMenuMap">
+        SELECT id, pid, menu_code, menu_name, menu_order, icon, url
+        FROM sys_menu
+        ORDER BY pid ASC, menu_order ASC, id ASC
+    </select>
+
+    <select id="selectAllButtons" resultMap="SysButtonMap">
+        SELECT id, menu_id, btn_code, btn_name, method, uri
+        FROM sys_button
+        ORDER BY menu_id ASC, id ASC
+    </select>
+</mapper>

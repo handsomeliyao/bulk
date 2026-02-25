@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.liyao.bulk.mapper.OperatorApplyMapper">
+
+    <resultMap id="OperatorApplyMap" type="com.liyao.bulk.model.OperatorApply">
+        <id column="id" property="id"/>
+        <result column="arr_no" property="arrNo"/>
+        <result column="dept_id" property="deptId"/>
+        <result column="dept_name" property="deptName"/>
+        <result column="tel_phone" property="telPhone"/>
+        <result column="mobile" property="mobile"/>
+        <result column="remark" property="remark"/>
+        <result column="oper_type" property="operType"/>
+        <result column="oper_status" property="operStatus"/>
+        <result column="arr_oper_code" property="operCode"/>
+        <result column="arr_oper_name" property="operName"/>
+        <result column="arr_date" property="arrDate"/>
+        <result column="review_oper_code" property="reviewOperCode"/>
+        <result column="review_oper_name" property="reviewOperName"/>
+        <result column="review_time" property="reviewTime"/>
+    </resultMap>
+
+    <select id="selectById" resultMap="OperatorApplyMap">
+        SELECT id, arr_no, dept_id, dept_name, tel_phone, mobile, remark, oper_type, oper_status,
+               arr_oper_code, arr_oper_name, arr_date, review_oper_code, review_oper_name, review_time
+        FROM operator_apply
+        WHERE id = #{id}
+    </select>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO operator_apply (
+            arr_no, dept_id, dept_name, tel_phone, mobile, remark,
+            oper_type, oper_status, arr_oper_code, arr_oper_name, arr_date,
+            review_oper_code, review_oper_name, review_time
+        ) VALUES (
+            #{arrNo}, #{deptId}, #{deptName}, #{telPhone}, #{mobile}, #{remark},
+            #{operType}, #{operStatus}, #{operCode}, #{operName}, #{arrDate},
+            #{reviewOperCode}, #{reviewOperName}, #{reviewTime}
+        )
+    </insert>
+
+    <select id="selectByCondition" resultType="com.liyao.bulk.dto.OperatorApplySummary">
+        SELECT id,
+               arr_no AS arrNo,
+               arr_oper_code AS arrOperCode,
+               arr_oper_name AS arrOperName,
+               oper_type AS operType,
+               oper_status AS operStatus,
+               arr_date AS arrDate,
+               review_oper_name AS reviewOperName,
+               review_oper_code AS reviewOperCode,
+               review_time AS reviewTime
+        FROM operator_apply
+        <where>
+            <if test="deptId != null">
+                AND dept_id = #{deptId}
+            </if>
+            <if test="statusList != null and statusList.size() > 0">
+                AND oper_status IN
+                <foreach collection="statusList" item="status" open="(" separator="," close=")">
+                    #{status}
+                </foreach>
+            </if>
+            <if test="startTime != null">
+                AND arr_date &gt;= #{startTime}
+            </if>
+            <if test="endTime != null">
+                AND arr_date &lt;= #{endTime}
+            </if>
+            <if test="arrNo != null and arrNo != ''">
+                AND arr_no = #{arrNo}
+            </if>
+            <if test="arrOperName != null and arrOperName != ''">
+                AND arr_oper_name LIKE CONCAT('%', #{arrOperName}, '%')
+            </if>
+            <if test="operType != null and operType != ''">
+                AND oper_type = #{operType}
+            </if>
+        </where>
+        ORDER BY arr_date ASC, arr_no ASC
+    </select>
+
+    <update id="updateStatus">
+        UPDATE operator_apply
+        SET oper_status = #{status},
+            review_oper_code = #{reviewOperCode},
+            review_oper_name = #{reviewOperName},
+            review_time = #{reviewTime}
+        WHERE id = #{id}
+    </update>
+
+    <select id="countPendingByUserId" resultType="int">
+        SELECT COUNT(1) FROM operator_apply
+        WHERE arr_oper_code = #{operCode} AND oper_status = 'PENDING'
+    </select>
+
+    <select id="countPendingByOperCode" resultType="int">
+        SELECT COUNT(1) FROM operator_apply
+        WHERE arr_oper_name = #{operName} AND oper_status = 'PENDING'
+    </select>
+</mapper>
+
+
+

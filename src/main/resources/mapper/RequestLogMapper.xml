@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.liyao.bulk.mapper.RequestLogMapper">
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO request_log (
+            request_id,
+            method,
+            path,
+            query_string,
+            handler,
+            args,
+            status_code,
+            success,
+            error_message,
+            cost_ms,
+            client_ip,
+            user_agent,
+            created_at
+        )
+        VALUES (
+            #{requestId},
+            #{method},
+            #{path},
+            #{queryString},
+            #{handler},
+            #{args},
+            #{statusCode},
+            #{success},
+            #{errorMessage},
+            #{costMs},
+            #{clientIp},
+            #{userAgent},
+            #{createdAt}
+        )
+    </insert>
+</mapper>

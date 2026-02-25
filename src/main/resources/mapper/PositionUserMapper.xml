@@ -1,0 +1,32 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.liyao.bulk.mapper.PositionUserMapper">
+
+    <resultMap id="PositionUserMap" type="com.liyao.bulk.model.PositionUser">
+        <id column="id" property="id"/>
+        <result column="post_id" property="postId"/>
+        <result column="oper_code" property="operCode"/>
+        <result column="created_at" property="createdAt"/>
+    </resultMap>
+
+    <select id="selectByOperCode" resultMap="PositionUserMap">
+        SELECT id, post_id, oper_code, created_at
+        FROM post_user
+        WHERE oper_code = #{operCode}
+    </select>
+
+    <delete id="deleteByOperCode">
+        DELETE FROM post_user WHERE oper_code = #{operCode}
+    </delete>
+
+    <insert id="insertBatch">
+        INSERT INTO post_user (post_id, oper_code, created_at)
+        VALUES
+        <foreach collection="items" item="item" separator=",">
+            (#{item.postId}, #{item.operCode}, #{item.createdAt})
+        </foreach>
+    </insert>
+</mapper>
+

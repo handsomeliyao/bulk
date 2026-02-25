@@ -1,0 +1,423 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="a9bacdf6-5fa7-4626-8472-f05e55c81eae" name="更改" comment="代码提交">
+      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/copilot.data.migration.ask2agent.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/dataSources.local.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/dataSources.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/dataSources/8665af93-34de-40ac-a6d6-501b41130a68.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/dataSources/8665af93-34de-40ac-a6d6-501b41130a68/storage_v2/_src_/schema/information_schema.FNRwLQ.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/dataSources/8665af93-34de-40ac-a6d6-501b41130a68/storage_v2/_src_/schema/performance_schema.kIw0nw.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/dataSources/a825b123-0168-4b6b-b91f-764aded12753.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/dataSources/a825b123-0168-4b6b-b91f-764aded12753/storage_v2/_src_/schema/information_schema.FNRwLQ.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/dataSources/a825b123-0168-4b6b-b91f-764aded12753/storage_v2/_src_/schema/mysql.osA4Bg.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/dataSources/a825b123-0168-4b6b-b91f-764aded12753/storage_v2/_src_/schema/performance_schema.kIw0nw.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/dataSources/a825b123-0168-4b6b-b91f-764aded12753/storage_v2/_src_/schema/sys.zb4BAA.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/data_source_mapping.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/db-forest-config.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/jarRepositories.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/setting.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/sqldialects.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.mvn/wrapper/maven-wrapper.properties" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.tmp_seed_all_tables_bulk.sql" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.tmp_seed_department_post_full_fields.sql" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.tmp_seed_department_post_more.sql" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.tmp_seed_more_test_data.sql" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.tmp_seed_remote_test_data.sql" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.tmp_seed_test_data.sql" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/doc/permission.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/doc/内部岗位管理.docx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/doc/内部岗位管理.docx.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/doc/部门操作员维护.docx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/doc/部门操作员维护.docx.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/doc/部门管理.docx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/doc/部门管理.docx.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/doc/部门管理员维护.docx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/doc/部门管理员维护.docx.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/logs/bulk-commodity-platform.2026-02-11.log" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/logs/bulk-commodity-platform.2026-02-12.log" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/logs/bulk-commodity-platform.2026-02-24.log" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/logs/bulk-commodity-platform.log" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/mvnw" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/mvnw.cmd" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/BulkApplication.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/aop/RequestLogAspect.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/common/ApiResponse.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/common/BusinessException.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/common/GlobalExceptionHandler.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/config/AsyncConfig.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/config/JacksonConfig.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/config/WebAsyncConfig.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/controller/AuthController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/controller/DepartmentAdminApplyController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/controller/DepartmentAdminController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/controller/DepartmentApplyController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/controller/DepartmentController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/controller/DepartmentOperatorApplyController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/controller/DepartmentOperatorController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/controller/InternalPositionController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/controller/MenuController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/controller/PermissionController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/controller/PositionApplyController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/dto/AdminActionRequest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/dto/AdminApplyExportRow.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/dto/AdminApplyQueryRequest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/dto/AdminApplyReviewRequest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/dto/AdminApplySummary.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/dto/AdminCreateRequest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/dto/AdminDetailResponse.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/dto/AdminExportRow.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/dto/AdminModifyRequest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/dto/AdminPermissionResponse.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/dto/AdminSummary.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/dto/ApplicantInfo.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/dto/ApplyQueryRequestBase.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/dto/ButtonAuthItem.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/dto/DepartmentApplyExportRow.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/dto/DepartmentApplyQueryRequest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/dto/DepartmentApplyReviewRequest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/dto/DepartmentApplySummary.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/dto/DepartmentCancelRequest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/dto/DepartmentCreateRequest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/dto/DepartmentDetailResponse.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/dto/DepartmentExportRow.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/dto/DepartmentModifyRequest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/dto/DepartmentSummary.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/dto/LoginRequest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/dto/LoginResponse.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/dto/MenuTreeItem.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/dto/OperatorActionRequest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/dto/OperatorApplyExportRow.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/dto/OperatorApplyQueryRequest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/dto/OperatorApplyReviewRequest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/dto/OperatorApplySummary.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/dto/OperatorAssignPermissionRequest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/dto/OperatorCreateRequest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/dto/OperatorDetailResponse.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/dto/OperatorExportRow.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/dto/OperatorModifyRequest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/dto/OperatorPermissionItem.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/dto/OperatorSummary.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/dto/PermissionButtonItem.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/dto/PermissionMenuTreeItem.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/dto/PositionApplyExportRow.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/dto/PositionApplyQueryRequest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/dto/PositionApplyReviewRequest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/dto/PositionApplySummary.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/dto/PositionCancelRequest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/dto/PositionCreateRequest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/dto/PositionDetailResponse.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/dto/PositionExportRow.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/dto/PositionModifyRequest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/dto/PositionOption.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/dto/PositionScopeItem.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/dto/PositionSummary.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/dto/ScopeItem.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/dto/UserDetailBase.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/dto/UserSummary.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/filter/RequestIdFilter.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/mapper/AdminApplyMapper.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/mapper/DepartmentApplyMapper.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/mapper/DepartmentApplyScopeMapper.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/mapper/DepartmentMapper.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/mapper/DepartmentScopeMapper.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/mapper/DepartmentUserMapper.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/mapper/OperatorApplyMapper.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/mapper/OperatorApplyPositionMapper.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/mapper/PermissionMapper.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/mapper/PlatformUserMapper.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/mapper/PositionApplyMapper.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/mapper/PositionApplyScopeMapper.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/mapper/PositionMapper.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/mapper/PositionScopeMapper.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/mapper/PositionUserMapper.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/mapper/RequestLogMapper.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/model/AdminApply.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/model/ApplicantAwareApply.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/model/Department.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/model/DepartmentApply.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/model/DepartmentApplyScope.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/model/DepartmentScope.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/model/DepartmentUser.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/model/OperatorApply.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/model/OperatorApplyPosition.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/model/PlatformUser.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/model/Position.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/model/PositionApply.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/model/PositionApplyScope.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/model/PositionScope.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/model/PositionUser.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/model/RequestLog.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/model/SysButton.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/model/SysMenu.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/model/UserApplyInfo.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/service/AdminService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/service/ApplyApplicantSupport.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/service/ApplyQuerySupport.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/service/ApplyReviewSupport.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/service/ApplyReviewValidationSupport.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/service/ApplyRevokeSupport.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/service/ApplyStatusSupport.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/service/ApplyValidationSupport.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/service/AuthService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/service/CurrentLoginUser.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/service/DepartmentService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/service/LoginUserCacheService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/service/MenuService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/service/OperatorService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/service/PermissionService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/service/PositionService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/service/RequestLogService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/service/UserCreateValidationSupport.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/service/UserDetailAssembler.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/application-prod.yml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/application.yml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/logback-spring.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/mapper/AdminApplyMapper.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/mapper/DepartmentApplyMapper.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/mapper/DepartmentApplyScopeMapper.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/mapper/DepartmentMapper.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/mapper/DepartmentScopeMapper.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/mapper/DepartmentUserMapper.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/mapper/OperatorApplyMapper.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/mapper/OperatorApplyPositionMapper.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/mapper/PermissionMapper.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/mapper/PlatformUserMapper.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/mapper/PositionApplyMapper.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/mapper/PositionApplyScopeMapper.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/mapper/PositionMapper.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/mapper/PositionScopeMapper.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/mapper/PositionUserMapper.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/mapper/RequestLogMapper.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/sql/init.sql" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/sql/sys-menu-data.sql" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/static/favicon.ico" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/static/scalar.html" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="CodeInsightWorkspaceSettings">
+    <option name="optimizeImportsOnTheFly" value="true" />
+  </component>
+  <component name="CopilotPersistence">
+    <persistenceIdMap>
+      <entry key="_E:/idea-workspace/learning/bulk-commodity-platform" value="39SdR8YK4PoaixUOd5OJSF1jDIB" />
+    </persistenceIdMap>
+  </component>
+  <component name="EmbeddingIndexingInfo">
+    <option name="cachedIndexableFilesCount" value="209" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;handsomeliyao&quot;
+  }
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/handsomeliyao/bulk.git&quot;,
+    &quot;accountId&quot;: &quot;063c09d6-9fb9-40e0-9b70-38608c1d0e8b&quot;
+  }
+}</component>
+  <component name="MavenImportPreferences">
+    <option name="generalSettings">
+      <MavenGeneralSettings>
+        <option name="customMavenHome" value="E:\apache-maven-3.8.6" />
+        <option name="localRepository" value="E:\repository" />
+        <option name="mavenHomeTypeForPersistence" value="CUSTOM" />
+        <option name="userSettingsFile" value="E:\apache-maven-3.8.6\conf\settings.xml" />
+      </MavenGeneralSettings>
+    </option>
+    <option name="importingSettings">
+      <MavenImportingSettings>
+        <option name="jdkForImporter" value="21" />
+      </MavenImportingSettings>
+    </option>
+  </component>
+  <component name="MavenRunner">
+    <option name="jreName" value="21" />
+  </component>
+  <component name="McpProjectServerCommands">
+    <commands />
+    <urls />
+  </component>
+  <component name="ProblemsViewState">
+    <option name="selectedTabId" value="CurrentFile" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 2
+}</component>
+  <component name="ProjectId" id="39SdR8YK4PoaixUOd5OJSF1jDIB" />
+  <component name="ProjectViewState">
+    <option name="autoscrollFromSource" value="true" />
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Maven.bulk-commodity-platform [clean].executor": "Run",
+    "Maven.bulk-commodity-platform [compile].executor": "Run",
+    "Maven.bulk-commodity-platform [org.apache.maven.plugins:maven-clean-plugin:3.4.1:clean].executor": "Run",
+    "Maven.bulk-commodity-platform [package].executor": "Run",
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "Notification.DisplayName-DoNotAsk-DatabaseConfigFileWatcher.found": "发现新的/更新的数据库配置",
+    "Notification.DoNotAsk-DatabaseConfigFileWatcher.found": "true",
+    "RequestMappingsPanelOrder0": "0",
+    "RequestMappingsPanelOrder1": "1",
+    "RequestMappingsPanelWidth0": "75",
+    "RequestMappingsPanelWidth1": "75",
+    "RunOnceActivity.MCP Project settings loaded": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
+    "SONARLINT_PRECOMMIT_ANALYSIS": "true",
+    "Spring Boot.BulkApplication.executor": "Debug",
+    "git-widget-placeholder": "master",
+    "ignore.virus.scanning.warn.message": "true",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "E:/idea-workspace/learning/bulk-commodity-platform",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "project.structure.last.edited": "SDK",
+    "project.structure.proportion": "0.15",
+    "project.structure.side.proportion": "0.25632185",
+    "run.code.analysis.last.selected.profile": "pProject Default",
+    "settings.editor.selected.configurable": "ml.llm.LLMConfigurable",
+    "ts.external.directory.path": "E:\\idea-workspace\\learning\\bulk-commodity-platform\\frontend\\node_modules\\typescript\\lib",
+    "vue.rearranger.settings.migration": "true"
+  },
+  "keyToStringList": {
+    "DatabaseDriversLRU": [
+      "mysql"
+    ],
+    "com.intellij.ide.scratch.LRUPopupBuilder$1/SQL 方言": [
+      "MySQL"
+    ]
+  }
+}]]></component>
+  <component name="ReactorSettings">
+    <option name="notificationShown" value="true" />
+  </component>
+  <component name="RunManager">
+    <configuration name="BulkApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+      <option name="FRAME_DEACTIVATION_UPDATE_POLICY" value="UpdateClassesAndResources" />
+      <module name="bulk-commodity-platform" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.liyao.bulk.BulkApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-jdk-30f59d01ecdd-2fc7cc6b9a17-intellij.indexing.shared.core-IU-253.30387.90" />
+        <option value="bundled-js-predefined-d6986cc7102b-9b0f141eb926-JavaScript-IU-253.30387.90" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="默认任务">
+      <changelist id="a9bacdf6-5fa7-4626-8472-f05e55c81eae" name="更改" comment="" />
+      <created>1770693395938</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1770693395938</updated>
+      <workItem from="1770693397028" duration="132000" />
+      <workItem from="1770693572932" duration="4471000" />
+      <workItem from="1770702415482" duration="7230000" />
+      <workItem from="1770710679935" duration="6610000" />
+      <workItem from="1770717382178" duration="3751000" />
+      <workItem from="1770777655711" duration="11592000" />
+      <workItem from="1770796980392" duration="1605000" />
+      <workItem from="1770799570256" duration="77000" />
+      <workItem from="1770799684515" duration="1100000" />
+      <workItem from="1770801194334" duration="8778000" />
+      <workItem from="1770866314493" duration="145000" />
+      <workItem from="1770866590830" duration="6264000" />
+      <workItem from="1770875211573" duration="15052000" />
+      <workItem from="1771902967832" duration="3163000" />
+      <workItem from="1771910122731" duration="20087000" />
+      <workItem from="1771994321065" duration="1331000" />
+      <workItem from="1771996752272" duration="1510000" />
+      <workItem from="1771998877874" duration="657000" />
+      <workItem from="1772000323140" duration="11783000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="UnknownFeatures">
+    <option featureType="dependencySupport" implementationName="java:org.springframework:spring-core" />
+    <option featureType="dependencySupport" implementationName="java:org.apache.kafka:kafka_2.13" />
+    <option featureType="dependencySupport" implementationName="javascript:npm:vite" />
+    <option featureType="dependencySupport" implementationName="java:io.projectreactor:reactor-core" />
+    <option featureType="dependencySupport" implementationName="java:org.springframework.data:spring-data-commons" />
+    <option featureType="dependencySupport" implementationName="javascript:npm:vue" />
+    <option featureType="dependencySupport" implementationName="java:org.springframework:spring-messaging" />
+    <option featureType="dependencySupport" implementationName="java:org.springframework.boot:spring-boot" />
+    <option featureType="dependencySupport" implementationName="java:org.springframework:spring-webmvc" />
+    <option featureType="dependencySupport" implementationName="java:org.projectlombok:lombok" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="代码提交" />
+    <option name="LAST_COMMIT_MESSAGE" value="代码提交" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/liyao/bulk/service/LoginUserCacheService.java</url>
+          <line>75</line>
+          <option name="timeStamp" value="3" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+  </component>
+  <component name="XSLT-Support.FileAssociations.UIState">
+    <expand />
+    <select />
+  </component>
+  <component name="github-copilot-workspace">
+    <instructionFileLocations>
+      <option value=".github/instructions" />
+    </instructionFileLocations>
+    <promptFileLocations>
+      <option value=".github/prompts" />
+    </promptFileLocations>
+  </component>
+</project>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.liyao.bulk.mapper.PositionApplyScopeMapper">
+
+    <resultMap id="PositionApplyScopeMap" type="com.liyao.bulk.model.PositionApplyScope">
+        <id column="id" property="id"/>
+        <result column="apply_id" property="applyId"/>
+        <result column="system_code" property="systemCode"/>
+        <result column="system_name" property="systemName"/>
+        <result column="scope_code" property="scopeCode"/>
+        <result column="scope_name" property="scopeName"/>
+    </resultMap>
+
+    <select id="selectByApplyId" resultMap="PositionApplyScopeMap">
+        SELECT id, apply_id, system_code, system_name, scope_code, scope_name
+        FROM position_apply_scope
+        WHERE apply_id = #{applyId}
+    </select>
+
+    <insert id="insertBatch">
+        INSERT INTO position_apply_scope (apply_id, system_code, system_name, scope_code, scope_name)
+        VALUES
+        <foreach collection="scopes" item="item" separator=",">
+            (#{item.applyId}, #{item.systemCode}, #{item.systemName}, #{item.scopeCode}, #{item.scopeName})
+        </foreach>
+    </insert>
+</mapper>
