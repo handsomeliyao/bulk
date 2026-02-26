@@ -238,6 +238,7 @@ CREATE TABLE `dept_btn`
     `id`         bigint   NOT NULL AUTO_INCREMENT COMMENT '主键',
     `dept_id`    bigint   NOT NULL COMMENT '部门ID',
     `btn_id`     bigint   NOT NULL COMMENT '按钮ID',
+    `permission_type` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '权限类型，1-操作权限，2-授权权限',
     `created_at` datetime NOT NULL COMMENT '创建时间',
     PRIMARY KEY (`id`),
     UNIQUE KEY `uk_dept_menu_btn` (`dept_id`, `btn_id`)

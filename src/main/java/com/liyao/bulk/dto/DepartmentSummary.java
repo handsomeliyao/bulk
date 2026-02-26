@@ -2,6 +2,7 @@ package com.liyao.bulk.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.LocalDateTime;
+import java.util.List;
 import lombok.Data;
 
 @Data
@@ -35,4 +36,10 @@ public class DepartmentSummary {
 
     @Schema(description = "复核时间")
     private LocalDateTime reviewTime;
+
+    @Schema(description = "授权权限")
+    private List<ButtonAuthItem> assignAuth;
+
+    @Schema(description = "操作权限")
+    private List<ButtonAuthItem> operAuth;
 }

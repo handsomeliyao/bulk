@@ -103,8 +103,14 @@ public class LoginUserCacheService {
     }
 
     public void removeCurrentLoginToken() {
-        HttpServletRequest request = currentRequest();
-        String token = resolveToken(request);
+        HttpServletRequest request = currentRequestOrNull();
+        if (request == null) {
+            return;
+        }
+        String token = resolveTokenIfPresent(request);
+        if (token == null || token.isBlank()) {
+            return;
+        }
         stringRedisTemplate.delete(cacheKeyPrefix + token);
         localCache.remove(token);
     }
@@ -117,7 +123,23 @@ public class LoginUserCacheService {
         return servletRequestAttributes.getRequest();
     }
 
+    private HttpServletRequest currentRequestOrNull() {
+        RequestAttributes attributes = RequestContextHolder.getRequestAttributes();
+        if (!(attributes instanceof ServletRequestAttributes servletRequestAttributes)) {
+            return null;
+        }
+        return servletRequestAttributes.getRequest();
+    }
+
     private String resolveToken(HttpServletRequest request) {
+        String token = resolveTokenIfPresent(request);
+        if (token == null || token.isBlank()) {
+            throw new BusinessException("Missing login token");
+        }
+        return token;
+    }
+
+    private String resolveTokenIfPresent(HttpServletRequest request) {
         String token = request.getHeader(tokenHeader);
         if ((token == null || token.isBlank()) && fallbackTokenHeader != null && !fallbackTokenHeader.isBlank()) {
             token = request.getHeader(fallbackTokenHeader);
@@ -129,11 +151,11 @@ public class LoginUserCacheService {
             token = request.getHeader("accessToken");
         }
         if (token == null || token.isBlank()) {
-            throw new BusinessException("Missing login token");
+            return null;
         }
         token = stripAuthPrefix(token);
         if (token.isBlank()) {
-            throw new BusinessException("Invalid login token");
+            return null;
         }
         return token;
     }

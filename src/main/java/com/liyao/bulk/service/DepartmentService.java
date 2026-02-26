@@ -3,8 +3,10 @@ package com.liyao.bulk.service;
 import com.liyao.bulk.common.BusinessException;
 import com.liyao.bulk.dto.*;
 import com.liyao.bulk.mapper.DepartmentApplyMapper;
+import com.liyao.bulk.mapper.DepartmentButtonPermissionMapper;
 import com.liyao.bulk.mapper.DepartmentMapper;
 import com.liyao.bulk.mapper.PlatformUserMapper;
+import com.liyao.bulk.model.DepartmentButtonPermission;
 import com.liyao.bulk.model.Department;
 import com.liyao.bulk.model.DepartmentApply;
 import com.liyao.bulk.model.PlatformUser;
@@ -16,8 +18,10 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Collections;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
 
 @Service
@@ -45,25 +49,34 @@ public class DepartmentService {
     private static final String OP_ADD = "ADD";
     private static final String OP_MODIFY = "MODIFY";
     private static final String OP_CANCEL = "CANCEL";
+    private static final String PERMISSION_TYPE_OPER = "1";
+    private static final String PERMISSION_TYPE_ASSIGN = "2";
 
     private final DepartmentMapper departmentMapper;
     private final DepartmentApplyMapper departmentApplyMapper;
+    private final DepartmentButtonPermissionMapper departmentButtonPermissionMapper;
     private final PlatformUserMapper platformUserMapper;
     private final LoginUserCacheService loginUserCacheService;
 
     public DepartmentService(DepartmentMapper departmentMapper,
                              DepartmentApplyMapper departmentApplyMapper,
+                             DepartmentButtonPermissionMapper departmentButtonPermissionMapper,
                              PlatformUserMapper platformUserMapper,
                              LoginUserCacheService loginUserCacheService) {
         this.departmentMapper = departmentMapper;
         this.departmentApplyMapper = departmentApplyMapper;
+        this.departmentButtonPermissionMapper = departmentButtonPermissionMapper;
         this.platformUserMapper = platformUserMapper;
         this.loginUserCacheService = loginUserCacheService;
     }
 
     public List<DepartmentSummary> queryDepartments(String name, String status) {
         List<Department> departments = departmentMapper.selectByCondition(name, status);
-        return departments.stream().map(this::toSummary).toList();
+        return departments.stream().map(department -> {
+            DepartmentSummary summary = toSummary(department);
+            fillDepartmentAuth(summary, department.getId());
+            return summary;
+        }).toList();
     }
 
     public DepartmentDetailResponse getDepartmentDetail(Long id) {
@@ -84,6 +97,9 @@ public class DepartmentService {
         response.setReviewTime(department.getReviewTime());
         response.setAuthScopes(Collections.emptyList());
         response.setOperScopes(Collections.emptyList());
+        DepartmentAuth auth = resolveDepartmentAuth(department.getId());
+        response.setAssignAuth(auth.assignAuth());
+        response.setOperAuth(auth.operAuth());
         return response;
     }
 
@@ -103,6 +119,7 @@ public class DepartmentService {
         DepartmentApply apply = buildApply(request.getDeptName(), request.getRemark(), applicant.getApplicantDeptId(),
                 STATUS_NORMAL, OP_ADD, applicant);
         departmentApplyMapper.insert(apply);
+        saveDeptButtonPermissions(apply.getDeptId(), request.getAssignAuth(), request.getOperAuth());
     }
 
     @Transactional
@@ -266,6 +283,46 @@ public class DepartmentService {
         );
     }
 
+    private void saveDeptButtonPermissions(Long deptId,
+                                           List<ButtonAuthItem> assignAuth,
+                                           List<ButtonAuthItem> operAuth) {
+        if (deptId == null) {
+            throw new BusinessException("Department id is required for permission persistence");
+        }
+        List<DepartmentButtonPermission> items = new java.util.ArrayList<>();
+        Set<String> dedup = new LinkedHashSet<>();
+        appendPermissions(items, dedup, deptId, operAuth, PERMISSION_TYPE_OPER);
+        appendPermissions(items, dedup, deptId, assignAuth, PERMISSION_TYPE_ASSIGN);
+        if (!items.isEmpty()) {
+            departmentButtonPermissionMapper.insertBatch(items);
+        }
+    }
+
+    private void appendPermissions(List<DepartmentButtonPermission> items,
+                                   Set<String> dedup,
+                                   Long deptId,
+                                   List<ButtonAuthItem> authItems,
+                                   String permissionType) {
+        if (authItems == null || authItems.isEmpty()) {
+            return;
+        }
+        for (ButtonAuthItem authItem : authItems) {
+            if (authItem == null || authItem.getBtnId() == null) {
+                continue;
+            }
+            String key = permissionType + ":" + authItem.getBtnId();
+            if (!dedup.add(key)) {
+                continue;
+            }
+            DepartmentButtonPermission item = new DepartmentButtonPermission();
+            item.setDeptId(deptId);
+            item.setBtnId(authItem.getBtnId());
+            item.setPermissionType(permissionType);
+            item.setCreatedAt(LocalDateTime.now());
+            items.add(item);
+        }
+    }
+
 
     private DepartmentApply buildApply(String name, String remark, Long deptId, String deptStatus, String operationType,
                                        CurrentLoginUser applicant) {
@@ -322,6 +379,43 @@ public class DepartmentService {
         summary.setReviewOperName(department.getReviewOperName());
         summary.setReviewTime(department.getReviewTime());
         return summary;
+    }
+
+    private void fillDepartmentAuth(DepartmentSummary summary, Long deptId) {
+        DepartmentAuth auth = resolveDepartmentAuth(deptId);
+        summary.setAssignAuth(auth.assignAuth());
+        summary.setOperAuth(auth.operAuth());
+    }
+
+    private DepartmentAuth resolveDepartmentAuth(Long deptId) {
+        if (deptId == null) {
+            return DepartmentAuth.empty();
+        }
+        List<DepartmentButtonPermission> permissions = departmentButtonPermissionMapper.selectByDeptId(deptId);
+        if (permissions == null || permissions.isEmpty()) {
+            return DepartmentAuth.empty();
+        }
+        List<ButtonAuthItem> assignAuth = new java.util.ArrayList<>();
+        List<ButtonAuthItem> operAuth = new java.util.ArrayList<>();
+        for (DepartmentButtonPermission permission : permissions) {
+            if (permission == null || permission.getBtnId() == null) {
+                continue;
+            }
+            ButtonAuthItem item = new ButtonAuthItem();
+            item.setBtnId(permission.getBtnId());
+            if (PERMISSION_TYPE_ASSIGN.equals(permission.getPermissionType())) {
+                assignAuth.add(item);
+            } else if (PERMISSION_TYPE_OPER.equals(permission.getPermissionType())) {
+                operAuth.add(item);
+            }
+        }
+        return new DepartmentAuth(assignAuth, operAuth);
+    }
+
+    private record DepartmentAuth(List<ButtonAuthItem> assignAuth, List<ButtonAuthItem> operAuth) {
+        static DepartmentAuth empty() {
+            return new DepartmentAuth(Collections.emptyList(), Collections.emptyList());
+        }
     }
 
     private UserSummary toUserSummary(PlatformUser user) {
