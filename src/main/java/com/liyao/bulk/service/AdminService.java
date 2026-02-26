@@ -109,16 +109,16 @@ public class AdminService {
         CurrentLoginUser applicant = loginUserCacheService.getRequiredCurrentUser();
         PlatformUser user = requireAdmin(userId, resolveDeptId(request.getDeptId(), applicant));
         if (request.getOperName() == null || request.getOperName().trim().isEmpty()) {
-            throw new BusinessException("Full name is required");
+            throw new BusinessException("请填写姓名");
         }
         if (!STATUS_NORMAL.equals(user.getOperStatus()) && !STATUS_RESET.equals(user.getOperStatus())) {
-            throw new BusinessException("Status does not allow modification");
+            throw new BusinessException("当前状态不允许修改");
         }
         if (adminApplyMapper.countPendingByUserId(userId) > 0) {
-            throw new BusinessException("Pending applications exist");
+            throw new BusinessException("已存在待复核申请");
         }
         if (!hasAdminChanges(user, request)) {
-            throw new BusinessException("No changes to apply");
+            throw new BusinessException("未检测到变更内容");
         }
         AdminApply apply = buildApply(resolveDeptId(request.getDeptId(), applicant),
                 resolveDeptName(request.getDeptName(), applicant), userId,
@@ -130,7 +130,7 @@ public class AdminService {
     public void freezeAdmin(Long userId, AdminActionRequest request) {
         CurrentLoginUser applicant = loginUserCacheService.getRequiredCurrentUser();
         PlatformUser user = requireAdmin(userId, resolveDeptId(request.getDeptId(), applicant));
-        validatePendingAndSelf(user, applicant, STATUS_NORMAL, "Status does not allow freeze");
+        validatePendingAndSelf(user, applicant, STATUS_NORMAL, "当前状态不允许冻结");
         AdminApply apply = buildApply(resolveDeptId(request.getDeptId(), applicant),
                 resolveDeptName(request.getDeptName(), applicant), userId,
                 user.getOperCode(), OP_FREEZE, null, request);
@@ -141,7 +141,7 @@ public class AdminService {
     public void unfreezeAdmin(Long userId, AdminActionRequest request) {
         CurrentLoginUser applicant = loginUserCacheService.getRequiredCurrentUser();
         PlatformUser user = requireAdmin(userId, resolveDeptId(request.getDeptId(), applicant));
-        validatePendingAndSelf(user, applicant, STATUS_FROZEN, "Status does not allow unfreeze");
+        validatePendingAndSelf(user, applicant, STATUS_FROZEN, "当前状态不允许解冻");
         AdminApply apply = buildApply(resolveDeptId(request.getDeptId(), applicant),
                 resolveDeptName(request.getDeptName(), applicant), userId,
                 user.getOperCode(), OP_UNFREEZE, null, request);
@@ -152,7 +152,7 @@ public class AdminService {
     public void resetPassword(Long userId, AdminActionRequest request) {
         CurrentLoginUser applicant = loginUserCacheService.getRequiredCurrentUser();
         PlatformUser user = requireAdmin(userId, resolveDeptId(request.getDeptId(), applicant));
-        validatePendingAndSelf(user, applicant, STATUS_NORMAL, "Status does not allow reset password");
+        validatePendingAndSelf(user, applicant, STATUS_NORMAL, "当前状态不允许重置密码");
         AdminApply apply = buildApply(resolveDeptId(request.getDeptId(), applicant),
                 resolveDeptName(request.getDeptName(), applicant), userId,
                 user.getOperCode(), OP_RESET_PWD, null, request);
@@ -164,7 +164,7 @@ public class AdminService {
         CurrentLoginUser applicant = loginUserCacheService.getRequiredCurrentUser();
         PlatformUser user = requireAdmin(userId, resolveDeptId(request.getDeptId(), applicant));
         if (!STATUS_NORMAL.equals(user.getOperStatus()) && !STATUS_RESET.equals(user.getOperStatus())) {
-            throw new BusinessException("Status does not allow cancel");
+            throw new BusinessException("当前状态不允许注销");
         }
         validatePendingAndSelf(user, applicant, null, null);
         AdminApply apply = buildApply(resolveDeptId(request.getDeptId(), applicant),
@@ -258,13 +258,13 @@ public class AdminService {
     private PlatformUser requireAdmin(Long userId, Long deptId) {
         PlatformUser user = platformUserMapper.selectById(userId);
         if (user == null) {
-            throw new BusinessException("Admin not found");
+            throw new BusinessException("管理员不存在");
         }
         if (deptId != null && !Objects.equals(deptId, user.getDeptId())) {
-            throw new BusinessException("No permission for this admin");
+            throw new BusinessException("无权操作该管理员");
         }
         if (!USER_TYPE_DEPT_ADMIN.equals(user.getUserType())) {
-            throw new BusinessException("User type is not admin");
+            throw new BusinessException("用户类型不是管理员");
         }
         return user;
     }
@@ -289,10 +289,10 @@ public class AdminService {
             throw new BusinessException(statusMessage);
         }
         if (adminApplyMapper.countPendingByUserId(user.getId()) > 0) {
-            throw new BusinessException("Pending applications exist");
+            throw new BusinessException("已存在待复核申请");
         }
         if (Objects.equals(user.getId(), applicant.getOperCode())) {
-            throw new BusinessException("Applicant cannot be the target user");
+            throw new BusinessException("申请人与目标用户不能为同一人");
         }
     }
 
@@ -316,7 +316,7 @@ public class AdminService {
     private AdminApply requireApply(Long applyId) {
         AdminApply apply = adminApplyMapper.selectById(applyId);
         if (apply == null) {
-            throw new BusinessException("Apply record not found");
+            throw new BusinessException("申请记录不存在");
         }
         return apply;
     }
@@ -480,4 +480,5 @@ public class AdminService {
         return requestDeptName != null ? requestDeptName : applicant.getApplicantDeptName();
     }
 }
+
 

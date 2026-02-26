@@ -6,6 +6,8 @@ import com.liyao.bulk.dto.OperatorApplyExportRow;
 import com.liyao.bulk.dto.OperatorApplyQueryRequest;
 import com.liyao.bulk.dto.OperatorApplyReviewRequest;
 import com.liyao.bulk.dto.OperatorApplySummary;
+import com.liyao.bulk.dto.OperatorDetailResponse;
+import com.liyao.bulk.service.ApplyCompareService;
 import com.liyao.bulk.service.OperatorService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -29,34 +31,27 @@ import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBo
 public class DepartmentOperatorApplyController {
 
     private final OperatorService operatorService;
+    private final ApplyCompareService applyCompareService;
 
-    public DepartmentOperatorApplyController(OperatorService operatorService) {
+    public DepartmentOperatorApplyController(OperatorService operatorService,
+                                             ApplyCompareService applyCompareService) {
         this.operatorService = operatorService;
+        this.applyCompareService = applyCompareService;
     }
 
     @GetMapping
-    @Operation(summary = "查询操作员申请", description = "按条件查询部门操作员申请列表")
-    /**
-     * 菜单: 用户与权限管理-部门操作员申请管理-已复核查询/待复核查询
-     * 功能: 查询部门操作员申请
-     * 示例: /api/department-operator-applications
-     */
+    @Operation(summary = "查询操作员申请", description = "按条件查询操作员申请列表")
     public ApiResponse<List<OperatorApplySummary>> queryApplies(OperatorApplyQueryRequest request) {
         return ApiResponse.success(operatorService.queryOperatorApplies(request));
     }
 
     @GetMapping("/export")
-    @Operation(summary = "导出操作员申请", description = "导出部门操作员申请查询结果")
-    /**
-     * 菜单: 用户与权限管理-部门操作员申请管理-下载
-     * 功能: 导出部门操作员申请
-     * 示例: /api/department-operator-applications/export
-     */
+    @Operation(summary = "导出操作员申请", description = "导出操作员申请列表为 Excel")
     public ResponseEntity<StreamingResponseBody> exportApplies(OperatorApplyQueryRequest request) {
         List<OperatorApplyExportRow> rows = operatorService.buildApplyExport(request);
-        String fileName = URLEncoder.encode("部门操作员申请信息.xlsx", StandardCharsets.UTF_8);
+        String fileName = URLEncoder.encode("操作员申请导出.xlsx", StandardCharsets.UTF_8);
         StreamingResponseBody body = outputStream -> EasyExcelFactory.write(outputStream, OperatorApplyExportRow.class)
-                .sheet("部门操作员申请信息")
+                .sheet("操作员申请导出")
                 .doWrite(rows);
         return ResponseEntity.ok()
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename*=UTF-8''" + fileName)
@@ -65,12 +60,7 @@ public class DepartmentOperatorApplyController {
     }
 
     @PostMapping("/{id}/revoke")
-    @Operation(summary = "撤销操作员申请", description = "撤销指定的部门操作员申请")
-    /**
-     * 菜单: 用户与权限管理-部门操作员申请管理-撤销
-     * 功能: 撤销部门操作员申请
-     * 示例: /api/department-operator-applications/{id}/revoke
-     */
+    @Operation(summary = "撤销操作员申请", description = "撤销指定操作员申请")
     public ApiResponse<Void> revokeApply(@Parameter(description = "申请ID") @PathVariable Long id,
                                          @Parameter(description = "操作人ID") @RequestParam Long operatorId) {
         operatorService.revokeApply(id, operatorId);
@@ -78,15 +68,16 @@ public class DepartmentOperatorApplyController {
     }
 
     @PostMapping("/{id}/review")
-    @Operation(summary = "审核操作员申请", description = "审核部门操作员申请并提交结果")
-    /**
-     * 菜单: 用户与权限管理-部门操作员申请管理-录入复核
-     * 功能: 复核部门操作员申请
-     * 示例: /api/department-operator-applications/{id}/review
-     */
+    @Operation(summary = "复核操作员申请", description = "复核指定操作员申请")
     public ApiResponse<Void> reviewApply(@Parameter(description = "申请ID") @PathVariable Long id,
                                          @RequestBody OperatorApplyReviewRequest request) {
         operatorService.reviewApply(id, request);
         return ApiResponse.success();
+    }
+
+    @GetMapping("/{id}/compare")
+    @Operation(summary = "比对操作员申请与正式数据", description = "返回未修改字段的正式值，已修改字段返回空")
+    public ApiResponse<OperatorDetailResponse> compareApply(@Parameter(description = "申请ID") @PathVariable Long id) {
+        return ApiResponse.success(applyCompareService.compareOperator(id));
     }
 }

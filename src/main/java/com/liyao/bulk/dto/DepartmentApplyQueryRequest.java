@@ -5,8 +5,7 @@ import lombok.Data;
 
 @Data
 public class DepartmentApplyQueryRequest {
-    @Schema(description = "申请状态类型：PENDING(待复核)、REJECTED(复核拒绝)、CANCELED(已撤销)")
-    // 部门申请状态筛选枚举：待复核/复核拒绝/已撤销
+    @Schema(description = "申请状态类型")
     private String statusType;
 
     @Schema(description = "开始日期")

@@ -38,17 +38,17 @@ public class AuthService {
         PlatformUser user = platformUserMapper.selectByOperCode(operCode);
         if (user == null) {
             LOGGER.warn("Login failed, operCode not found: {}", operCode);
-            throw new BusinessException("OperCode or password is incorrect");
+            throw new BusinessException("用户名或密码错误");
         }
         String requestPassword = request.getPassword().trim();
         String storedPassword = user.getPassword() == null ? "" : user.getPassword().trim();
         if (storedPassword.isEmpty() || !storedPassword.equals(requestPassword)) {
             LOGGER.warn("Login failed, password mismatch: {}, storedLength={}", operCode, storedPassword.length());
-            throw new BusinessException("OperCode or password is incorrect");
+            throw new BusinessException("用户名或密码错误");
         }
         if (!STATUS_NORMAL.equals(user.getOperStatus()) && !STATUS_RESET.equals(user.getOperStatus())) {
             LOGGER.warn("Login failed, status not allowed: {}, status={}", operCode, user.getOperStatus());
-            throw new BusinessException("User status does not allow login");
+            throw new BusinessException("当前用户状态不允许登录");
         }
 
         String token = UUID.randomUUID().toString().replace("-", "");
@@ -83,13 +83,13 @@ public class AuthService {
 
     private void validateRequest(LoginRequest request) {
         if (request == null) {
-            throw new BusinessException("Request is required");
+            throw new BusinessException("请求参数不能为空");
         }
         if (request.getOperCode() == null || request.getOperCode().trim().isEmpty()) {
-            throw new BusinessException("OperCode is required");
+            throw new BusinessException("用户名不能为空");
         }
         if (request.getPassword() == null || request.getPassword().isEmpty()) {
-            throw new BusinessException("Password is required");
+            throw new BusinessException("密码不能为空");
         }
     }
 
@@ -101,3 +101,4 @@ public class AuthService {
         return department == null ? null : department.getDeptName();
     }
 }
+

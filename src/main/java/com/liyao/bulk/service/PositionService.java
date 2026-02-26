@@ -98,10 +98,10 @@ public class PositionService {
         validateCreateRequest(request);
         Position existing = positionMapper.selectByNameInDept(request.getDeptId(), request.getPostName());
         if (existing != null) {
-            throw new BusinessException("Position name already exists");
+            throw new BusinessException("岗位名称已存在");
         }
         if (positionApplyMapper.countPendingByDeptAndName(request.getDeptId(), request.getPostName()) > 0) {
-            throw new BusinessException("Pending application already exists");
+            throw new BusinessException("已存在待复核申请");
         }
         createApply(request.getDeptId(), request.getDeptName(),
                 null, request.getPostName(), request.getRemark(), OP_ADD, applicant);
@@ -113,13 +113,13 @@ public class PositionService {
         validateModifyRequest(request);
         Position position = requirePosition(positionId);
         if (!STATUS_NORMAL.equals(position.getPostStatus())) {
-            throw new BusinessException("Position status does not allow modification");
+            throw new BusinessException("当前岗位状态不允许修改");
         }
         if (positionApplyMapper.countPendingByPositionId(positionId) > 0) {
-            throw new BusinessException("Pending application exists");
+            throw new BusinessException("已存在待复核申请");
         }
         if (!hasPositionChanges(position, request)) {
-            throw new BusinessException("No changes to apply");
+            throw new BusinessException("未检测到变更内容");
         }
         createApply(request.getDeptId(), request.getDeptName(),
                 positionId, position.getPostName(), request.getRemark(), OP_MODIFY, applicant);
@@ -130,10 +130,10 @@ public class PositionService {
         CurrentLoginUser applicant = loginUserCacheService.getRequiredCurrentUser();
         Position position = requirePosition(positionId);
         if (!STATUS_NORMAL.equals(position.getPostStatus())) {
-            throw new BusinessException("Position status does not allow cancel");
+            throw new BusinessException("当前岗位状态不允许注销");
         }
         if (positionApplyMapper.countPendingByPositionId(positionId) > 0) {
-            throw new BusinessException("Pending application exists");
+            throw new BusinessException("已存在待复核申请");
         }
         createApply(request.getDeptId(), request.getDeptName(),
                 positionId, position.getPostName(), position.getRemark(), OP_CANCEL, applicant);
@@ -267,7 +267,7 @@ public class PositionService {
 
     private void ensureReviewDataMatchesApply(PositionApply apply, PositionApplyReviewRequest request) {
         if (!Objects.equals(apply.getRemark(), request.getRemark())) {
-            throw new BusinessException("Review data does not match apply data");
+            throw new BusinessException("复核数据与申请数据不一致");
         }
     }
 
@@ -297,7 +297,7 @@ public class PositionService {
     private Position requirePosition(Long positionId) {
         Position position = positionMapper.selectById(positionId);
         if (position == null) {
-            throw new BusinessException("Position not found");
+            throw new BusinessException("岗位不存在");
         }
         return position;
     }
@@ -305,7 +305,7 @@ public class PositionService {
     private PositionApply requireApply(Long applyId) {
         PositionApply apply = positionApplyMapper.selectById(applyId);
         if (apply == null) {
-            throw new BusinessException("Apply record not found");
+            throw new BusinessException("申请记录不存在");
         }
         return apply;
     }
@@ -345,7 +345,7 @@ public class PositionService {
 
     private void validateCreateRequest(PositionCreateRequest request) {
         if (request.getPostName() == null || request.getPostName().trim().isEmpty()) {
-            throw new BusinessException("Position name is required");
+            throw new BusinessException("岗位名称不能为空");
         }
     }
 
@@ -387,3 +387,4 @@ public class PositionService {
         return timestamp + random;
     }
 }
+

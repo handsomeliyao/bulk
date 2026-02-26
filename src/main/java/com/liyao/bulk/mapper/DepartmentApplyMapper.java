@@ -14,6 +14,8 @@ public interface DepartmentApplyMapper {
 
     DepartmentApply selectById(@Param("id") Long id);
 
+    DepartmentApply selectByArrNo(@Param("arrNo") String arrNo);
+
     List<DepartmentApplySummary> selectByCondition(@Param("statusList") List<String> statusList,
                                                    @Param("startTime") LocalDateTime startTime,
                                                    @Param("endTime") LocalDateTime endTime,
@@ -31,5 +33,7 @@ public interface DepartmentApplyMapper {
                      @Param("remark") String remark);
 
     int countPendingByDeptId(@Param("deptId") Long deptId);
+
+    int countPendingByDeptName(@Param("deptName") String deptName);
 }
 

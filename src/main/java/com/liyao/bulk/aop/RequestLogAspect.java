@@ -77,7 +77,7 @@ public class RequestLogAspect {
             if (ex instanceof BusinessException) {
                 throw ex;
             }
-            throw new IllegalStateException(String.format("request failed for %s %s%s | handler=%s", method, uri, query, signature), ex);
+            throw new IllegalStateException(String.format("请求处理失败：%s %s%s | 处理器=%s", method, uri, query, signature), ex);
         }
     }
 
@@ -147,7 +147,7 @@ public class RequestLogAspect {
                     throw ex;
                 }
                 throw new IllegalStateException(
-                        String.format("streaming failed for %s %s%s | handler=%s",
+                        String.format("流式响应失败：%s %s%s | 处理器=%s",
                                 context.method, context.uri, context.query, context.signature), ex);
             } finally {
                 if (previous != null) {
@@ -225,3 +225,4 @@ public class RequestLogAspect {
         return ex.getClass().getSimpleName() + ": " + message;
     }
 }
+

@@ -135,16 +135,16 @@ public class OperatorService {
         CurrentLoginUser applicant = loginUserCacheService.getRequiredCurrentUser();
         PlatformUser user = requireOperator(userId, resolveDeptId(request.getDeptId(), applicant));
         if (request.getOperName() == null || request.getOperName().trim().isEmpty()) {
-            throw new BusinessException("Full name is required");
+            throw new BusinessException("请填写姓名");
         }
         if (!STATUS_NORMAL.equals(user.getOperStatus()) && !STATUS_RESET.equals(user.getOperStatus())) {
-            throw new BusinessException("Status does not allow modification");
+            throw new BusinessException("当前状态不允许修改");
         }
         if (operatorApplyMapper.countPendingByUserId(userId) > 0) {
-            throw new BusinessException("Pending applications exist");
+            throw new BusinessException("已存在待复核申请");
         }
         if (!hasOperatorChanges(user, request)) {
-            throw new BusinessException("No changes to apply");
+            throw new BusinessException("未检测到变更内容");
         }
         OperatorApply apply = buildApply(resolveDeptId(request.getDeptId(), applicant),
                 resolveDeptName(request.getDeptName(), applicant), userId,
@@ -156,7 +156,7 @@ public class OperatorService {
     public void freezeOperator(Long userId, OperatorActionRequest request) {
         CurrentLoginUser applicant = loginUserCacheService.getRequiredCurrentUser();
         PlatformUser user = requireOperator(userId, resolveDeptId(request.getDeptId(), applicant));
-        validatePendingAndSelf(user, applicant, STATUS_NORMAL, "Status does not allow freeze");
+        validatePendingAndSelf(user, applicant, STATUS_NORMAL, "当前状态不允许冻结");
         OperatorApply apply = buildApply(resolveDeptId(request.getDeptId(), applicant),
                 resolveDeptName(request.getDeptName(), applicant), userId,
                 user.getOperCode(), OP_FREEZE, null, request);
@@ -167,7 +167,7 @@ public class OperatorService {
     public void unfreezeOperator(Long userId, OperatorActionRequest request) {
         CurrentLoginUser applicant = loginUserCacheService.getRequiredCurrentUser();
         PlatformUser user = requireOperator(userId, resolveDeptId(request.getDeptId(), applicant));
-        validatePendingAndSelf(user, applicant, STATUS_FROZEN, "Status does not allow unfreeze");
+        validatePendingAndSelf(user, applicant, STATUS_FROZEN, "当前状态不允许解冻");
         OperatorApply apply = buildApply(resolveDeptId(request.getDeptId(), applicant),
                 resolveDeptName(request.getDeptName(), applicant), userId,
                 user.getOperCode(), OP_UNFREEZE, null, request);
@@ -178,7 +178,7 @@ public class OperatorService {
     public void resetPassword(Long userId, OperatorActionRequest request) {
         CurrentLoginUser applicant = loginUserCacheService.getRequiredCurrentUser();
         PlatformUser user = requireOperator(userId, resolveDeptId(request.getDeptId(), applicant));
-        validatePendingAndSelf(user, applicant, STATUS_NORMAL, "Status does not allow reset password");
+        validatePendingAndSelf(user, applicant, STATUS_NORMAL, "当前状态不允许重置密码");
         OperatorApply apply = buildApply(resolveDeptId(request.getDeptId(), applicant),
                 resolveDeptName(request.getDeptName(), applicant), userId,
                 user.getOperCode(), OP_RESET_PWD, null, request);
@@ -190,7 +190,7 @@ public class OperatorService {
         CurrentLoginUser applicant = loginUserCacheService.getRequiredCurrentUser();
         PlatformUser user = requireOperator(userId, resolveDeptId(request.getDeptId(), applicant));
         if (!STATUS_NORMAL.equals(user.getOperStatus()) && !STATUS_RESET.equals(user.getOperStatus())) {
-            throw new BusinessException("Status does not allow cancel");
+            throw new BusinessException("当前状态不允许注销");
         }
         validatePendingAndSelf(user, applicant, null, null);
         OperatorApply apply = buildApply(resolveDeptId(request.getDeptId(), applicant),
@@ -204,7 +204,7 @@ public class OperatorService {
         CurrentLoginUser applicant = loginUserCacheService.getRequiredCurrentUser();
         PlatformUser user = requireOperator(userId, resolveDeptId(request.getDeptId(), applicant));
         validateStatusAndPendingForNormalOrReset(user);
-        ensureSelectionChanged(currentPositionIds(userId), request.getPostIds(), "Positions are required");
+        ensureSelectionChanged(currentPositionIds(userId), request.getPostIds(), "请选择岗位");
         OperatorApply apply = buildApply(resolveDeptId(request.getDeptId(), applicant),
                 resolveDeptName(request.getDeptName(), applicant), userId,
                 user.getOperCode(), OP_ASSIGN_PERM, null, request);
@@ -296,13 +296,13 @@ public class OperatorService {
     private PlatformUser requireOperator(Long userId, Long deptId) {
         PlatformUser user = platformUserMapper.selectById(userId);
         if (user == null) {
-            throw new BusinessException("Operator not found");
+            throw new BusinessException("操作员不存在");
         }
         if (deptId != null && !Objects.equals(deptId, user.getDeptId())) {
-            throw new BusinessException("No permission for this operator");
+            throw new BusinessException("无权操作该操作员");
         }
         if (!USER_TYPE_DEPT_OPERATOR.equals(user.getUserType())) {
-            throw new BusinessException("User type is not operator");
+            throw new BusinessException("用户类型不是操作员");
         }
         return user;
     }
@@ -327,19 +327,19 @@ public class OperatorService {
             throw new BusinessException(statusMessage);
         }
         if (operatorApplyMapper.countPendingByUserId(user.getId()) > 0) {
-            throw new BusinessException("Pending applications exist");
+            throw new BusinessException("已存在待复核申请");
         }
         if (Objects.equals(user.getId(), applicant.getOperCode())) {
-            throw new BusinessException("Applicant cannot be the target user");
+            throw new BusinessException("申请人与目标用户不能为同一人");
         }
     }
 
     private void validateStatusAndPendingForNormalOrReset(PlatformUser user) {
         if (!STATUS_NORMAL.equals(user.getOperStatus()) && !STATUS_RESET.equals(user.getOperStatus())) {
-            throw new BusinessException("Invalid status");
+            throw new BusinessException("状态不合法");
         }
         if (operatorApplyMapper.countPendingByUserId(user.getId()) > 0) {
-            throw new BusinessException("Pending applications exist");
+            throw new BusinessException("已存在待复核申请");
         }
     }
 
@@ -363,7 +363,7 @@ public class OperatorService {
     private OperatorApply requireApply(Long applyId) {
         OperatorApply apply = operatorApplyMapper.selectById(applyId);
         if (apply == null) {
-            throw new BusinessException("Apply record not found");
+            throw new BusinessException("申请记录不存在");
         }
         return apply;
     }
@@ -540,7 +540,7 @@ public class OperatorService {
         }
         Set<Long> incomingSet = new HashSet<>(incoming);
         if (current.equals(incomingSet)) {
-            throw new BusinessException("No changes to apply");
+            throw new BusinessException("未检测到变更内容");
         }
     }
 
@@ -552,4 +552,5 @@ public class OperatorService {
         return requestDeptName != null ? requestDeptName : applicant.getApplicantDeptName();
     }
 }
+
 

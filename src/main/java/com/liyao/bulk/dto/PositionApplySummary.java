@@ -1,5 +1,6 @@
 package com.liyao.bulk.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.LocalDateTime;
 import lombok.Data;
@@ -9,7 +10,7 @@ public class PositionApplySummary {
     @Schema(description = "主键ID")
     private Long id;
 
-    @Schema(description = "申请单号")
+    @Schema(description = "申请编号")
     private String arrNo;
 
     @Schema(description = "岗位ID")
@@ -28,6 +29,7 @@ public class PositionApplySummary {
     private String arrOperName;
 
     @Schema(description = "申请时间")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime arrDate;
 
     @Schema(description = "复核人姓名")
@@ -37,5 +39,6 @@ public class PositionApplySummary {
     private Long reviewOperCode;
 
     @Schema(description = "复核时间")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime reviewTime;
 }

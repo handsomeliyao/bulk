@@ -7,8 +7,42 @@
     <list default="true" id="a9bacdf6-5fa7-4626-8472-f05e55c81eae" name="更改" comment="修改部门新增未保存操作权限和授权权限数据">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/logs/bulk-commodity-platform.log" beforeDir="false" afterPath="$PROJECT_DIR$/logs/bulk-commodity-platform.log" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/aop/RequestLogAspect.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/aop/RequestLogAspect.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/common/ApiResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/common/ApiResponse.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/common/BusinessException.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/common/BusinessException.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/common/GlobalExceptionHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/common/GlobalExceptionHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/controller/DepartmentAdminApplyController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/controller/DepartmentAdminApplyController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/controller/DepartmentAdminController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/controller/DepartmentAdminController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/controller/DepartmentApplyController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/controller/DepartmentApplyController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/controller/DepartmentController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/controller/DepartmentController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/controller/DepartmentOperatorApplyController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/controller/DepartmentOperatorApplyController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/controller/DepartmentOperatorController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/controller/DepartmentOperatorController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/controller/InternalPositionController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/controller/InternalPositionController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/controller/PositionApplyController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/controller/PositionApplyController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/dto/AdminApplyQueryRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/dto/AdminApplyQueryRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/dto/AdminApplySummary.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/dto/AdminApplySummary.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/dto/AdminSummary.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/dto/AdminSummary.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/dto/DepartmentApplyApproveRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/dto/DepartmentApplyApproveRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/dto/DepartmentApplyQueryRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/dto/DepartmentApplyQueryRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/dto/DepartmentApplySummary.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/dto/DepartmentApplySummary.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/dto/DepartmentSummary.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/dto/DepartmentSummary.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/dto/OperatorApplyQueryRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/dto/OperatorApplyQueryRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/dto/OperatorApplySummary.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/dto/OperatorApplySummary.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/dto/OperatorSummary.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/dto/OperatorSummary.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/dto/PositionApplyQueryRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/dto/PositionApplyQueryRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/dto/PositionApplySummary.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/dto/PositionApplySummary.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/dto/PositionSummary.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/dto/PositionSummary.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/mapper/DepartmentApplyMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/mapper/DepartmentApplyMapper.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/service/AdminService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/service/AdminService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/service/AuthService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/service/AuthService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/service/DepartmentService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/service/DepartmentService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/service/LoginUserCacheService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/service/LoginUserCacheService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/service/OperatorService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/service/OperatorService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/service/PositionService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/service/PositionService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/application-prod.yml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/application-prod.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/application.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/mapper/DepartmentApplyMapper.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/mapper/DepartmentApplyMapper.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -168,7 +202,7 @@
       <workItem from="1771996752272" duration="1510000" />
       <workItem from="1771998877874" duration="657000" />
       <workItem from="1772000323140" duration="19601000" />
-      <workItem from="1772082835575" duration="1485000" />
+      <workItem from="1772082835575" duration="15764000" />
     </task>
     <task id="LOCAL-00001" summary="代码提交">
       <option name="closed" value="true" />
@@ -194,7 +228,15 @@
       <option name="project" value="LOCAL" />
       <updated>1772083234272</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="修改部门新增未保存操作权限和授权权限数据">
+      <option name="closed" value="true" />
+      <created>1772084833599</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1772084833599</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -228,17 +270,6 @@
     <MESSAGE value="修改表格日强格式为短横杠" />
     <MESSAGE value="修改部门新增未保存操作权限和授权权限数据" />
     <option name="LAST_COMMIT_MESSAGE" value="修改部门新增未保存操作权限和授权权限数据" />
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/com/liyao/bulk/service/LoginUserCacheService.java</url>
-          <line>75</line>
-          <option name="timeStamp" value="3" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

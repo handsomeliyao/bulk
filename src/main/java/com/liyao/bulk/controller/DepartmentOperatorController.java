@@ -41,26 +41,16 @@ public class DepartmentOperatorController {
 
     @GetMapping
     @Operation(summary = "查询部门操作员", description = "按条件查询部门操作员列表")
-    /**
-     * 菜单: 用户与权限管理-部门操作员维护-查询
-     * 功能: 查询本部门操作员
-     * 示例: /api/department-operators
-     */
     public ApiResponse<List<OperatorSummary>> queryOperators(
             @Parameter(description = "部门ID") @RequestParam Long deptId,
-            @Parameter(description = "用户名") @RequestParam(required = false) String operCode,
-            @Parameter(description = "姓名") @RequestParam(required = false) String operName,
-            @Parameter(description = "状态") @RequestParam(required = false) String status) {
-        return ApiResponse.success(operatorService.queryOperators(deptId, operCode, operName, status));
+            @Parameter(description = "用户编码") @RequestParam(required = false) String operCode,
+            @Parameter(description = "用户姓名") @RequestParam(required = false) String operName,
+            @Parameter(description = "用户状态") @RequestParam(required = false) String operStatus) {
+        return ApiResponse.success(operatorService.queryOperators(deptId, operCode, operName, operStatus));
     }
 
     @GetMapping("/{id}")
     @Operation(summary = "查询操作员详情", description = "根据操作员ID获取详情")
-    /**
-     * 菜单: 用户与权限管理-部门操作员维护-详情
-     * 功能: 查看操作员详情
-     * 示例: /api/department-operators/{id}
-     */
     public ApiResponse<OperatorDetailResponse> getOperatorDetail(@Parameter(description = "操作员ID") @PathVariable Long id,
                                                                  @Parameter(description = "部门ID") @RequestParam Long deptId) {
         return ApiResponse.success(operatorService.getOperatorDetail(id, deptId));
@@ -68,11 +58,6 @@ public class DepartmentOperatorController {
 
     @GetMapping("/{id}/permissions")
     @Operation(summary = "刷新操作员权限", description = "刷新并返回操作员权限列表")
-    /**
-     * 菜单: 用户与权限管理-部门操作员维护-详情
-     * 功能: 刷新操作员权限
-     * 示例: /api/department-operators/{id}/permissions
-     */
     public ApiResponse<List<OperatorPermissionItem>> refreshPermissions(@Parameter(description = "操作员ID") @PathVariable Long id,
                                                                         @Parameter(description = "部门ID") @RequestParam Long deptId) {
         return ApiResponse.success(operatorService.refreshPermissions(id, deptId));
@@ -80,17 +65,12 @@ public class DepartmentOperatorController {
 
     @GetMapping("/export")
     @Operation(summary = "导出部门操作员", description = "导出部门操作员查询结果")
-    /**
-     * 菜单: 用户与权限管理-部门操作员维护-下载
-     * 功能: 导出操作员查询结果
-     * 示例: /api/department-operators/export
-     */
     public ResponseEntity<StreamingResponseBody> exportOperators(
             @Parameter(description = "部门ID") @RequestParam Long deptId,
-            @Parameter(description = "用户名") @RequestParam(required = false) String operCode,
-            @Parameter(description = "姓名") @RequestParam(required = false) String operName,
-            @Parameter(description = "状态") @RequestParam(required = false) String status) {
-        List<OperatorExportRow> rows = operatorService.buildOperatorExport(deptId, operCode, operName, status);
+            @Parameter(description = "用户编码") @RequestParam(required = false) String operCode,
+            @Parameter(description = "用户姓名") @RequestParam(required = false) String operName,
+            @Parameter(description = "用户状态") @RequestParam(required = false) String operStatus) {
+        List<OperatorExportRow> rows = operatorService.buildOperatorExport(deptId, operCode, operName, operStatus);
         String fileName = URLEncoder.encode("部门操作员信息.xlsx", StandardCharsets.UTF_8);
         StreamingResponseBody body = outputStream -> EasyExcelFactory.write(outputStream, OperatorExportRow.class)
                 .sheet("部门操作员信息")
@@ -103,11 +83,6 @@ public class DepartmentOperatorController {
 
     @PostMapping("/applications")
     @Operation(summary = "新增操作员申请", description = "提交新增部门操作员申请")
-    /**
-     * 菜单: 用户与权限管理-部门操作员维护-新增
-     * 功能: 新增操作员申请
-     * 示例: /api/department-operators/applications
-     */
     public ApiResponse<Void> createOperator(@RequestBody OperatorCreateRequest request) {
         operatorService.createOperatorApply(request);
         return ApiResponse.success();
@@ -115,11 +90,6 @@ public class DepartmentOperatorController {
 
     @PutMapping("/{id}/applications")
     @Operation(summary = "修改操作员申请", description = "修改部门操作员申请信息")
-    /**
-     * 菜单: 用户与权限管理-部门操作员维护-修改
-     * 功能: 修改操作员申请
-     * 示例: /api/department-operators/{id}/applications
-     */
     public ApiResponse<Void> modifyOperator(@Parameter(description = "申请ID") @PathVariable Long id,
                                             @RequestBody OperatorModifyRequest request) {
         operatorService.modifyOperatorApply(id, request);
@@ -128,11 +98,6 @@ public class DepartmentOperatorController {
 
     @PostMapping("/{id}/applications/freeze")
     @Operation(summary = "冻结操作员申请", description = "提交冻结部门操作员申请")
-    /**
-     * 菜单: 用户与权限管理-部门操作员维护-冻结
-     * 功能: 冻结操作员申请
-     * 示例: /api/department-operators/{id}/applications/freeze
-     */
     public ApiResponse<Void> freezeOperator(@Parameter(description = "申请ID") @PathVariable Long id,
                                             @RequestBody OperatorActionRequest request) {
         operatorService.freezeOperator(id, request);
@@ -141,11 +106,6 @@ public class DepartmentOperatorController {
 
     @PostMapping("/{id}/applications/unfreeze")
     @Operation(summary = "解冻操作员申请", description = "提交解冻部门操作员申请")
-    /**
-     * 菜单: 用户与权限管理-部门操作员维护-解冻
-     * 功能: 解冻操作员申请
-     * 示例: /api/department-operators/{id}/applications/unfreeze
-     */
     public ApiResponse<Void> unfreezeOperator(@Parameter(description = "申请ID") @PathVariable Long id,
                                               @RequestBody OperatorActionRequest request) {
         operatorService.unfreezeOperator(id, request);
@@ -154,11 +114,6 @@ public class DepartmentOperatorController {
 
     @PostMapping("/{id}/applications/reset-password")
     @Operation(summary = "重置密码申请", description = "提交操作员重置密码申请")
-    /**
-     * 菜单: 用户与权限管理-部门操作员维护-重置密码
-     * 功能: 重置密码申请
-     * 示例: /api/department-operators/{id}/applications/reset-password
-     */
     public ApiResponse<Void> resetPassword(@Parameter(description = "申请ID") @PathVariable Long id,
                                            @RequestBody OperatorActionRequest request) {
         operatorService.resetPassword(id, request);
@@ -167,16 +122,17 @@ public class DepartmentOperatorController {
 
     @PostMapping("/{id}/applications/cancel")
     @Operation(summary = "注销操作员申请", description = "提交注销部门操作员申请")
-    /**
-     * 菜单: 用户与权限管理-部门操作员维护-注销
-     * 功能: 注销操作员申请
-     * 示例: /api/department-operators/{id}/applications/cancel
-     */
     public ApiResponse<Void> cancelOperator(@Parameter(description = "申请ID") @PathVariable Long id,
                                             @RequestBody OperatorActionRequest request) {
         operatorService.cancelOperator(id, request);
         return ApiResponse.success();
     }
 
-    
+    @PostMapping("/{id}/applications/assign-permissions")
+    @Operation(summary = "分配权限申请", description = "提交操作员分配权限申请")
+    public ApiResponse<Void> assignPermissions(@Parameter(description = "申请ID") @PathVariable Long id,
+                                               @RequestBody OperatorAssignPermissionRequest request) {
+        operatorService.assignPermissions(id, request);
+        return ApiResponse.success();
+    }
 }

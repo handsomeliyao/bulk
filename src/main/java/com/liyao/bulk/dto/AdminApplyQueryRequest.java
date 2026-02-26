@@ -17,7 +17,7 @@ public class AdminApplyQueryRequest implements ApplyQueryRequestBase {
     @Schema(description = "结束日期")
     private String endDate;
 
-    @Schema(description = "申请单号")
+    @Schema(description = "申请编号")
     private String arrNo;
 
     @Schema(description = "申请人姓名")

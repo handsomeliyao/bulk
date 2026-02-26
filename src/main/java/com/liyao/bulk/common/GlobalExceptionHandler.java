@@ -17,7 +17,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(BusinessException.class)
     public ApiResponse<Void> handleBusinessException(BusinessException ex) {
         log.warn("Business error", ex);
-        return ApiResponse.error(ex.getMessage());
+        return ApiResponse.error(ex.getCode(), ex.getMessage());
     }
 
     @ExceptionHandler(NoResourceFoundException.class)

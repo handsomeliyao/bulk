@@ -2,12 +2,12 @@ package com.liyao.bulk.controller;
 
 import com.alibaba.excel.EasyExcelFactory;
 import com.liyao.bulk.common.ApiResponse;
+import com.liyao.bulk.dto.DepartmentApplyQueryRequest;
+import com.liyao.bulk.dto.DepartmentApplySummary;
 import com.liyao.bulk.dto.DepartmentCancelRequest;
 import com.liyao.bulk.dto.DepartmentCreateRequest;
 import com.liyao.bulk.dto.DepartmentDetailResponse;
 import com.liyao.bulk.dto.DepartmentExportRow;
-import com.liyao.bulk.dto.DepartmentApplyQueryRequest;
-import com.liyao.bulk.dto.DepartmentApplySummary;
 import com.liyao.bulk.dto.DepartmentModifyRequest;
 import com.liyao.bulk.dto.DepartmentSummary;
 import com.liyao.bulk.dto.UserSummary;
@@ -41,31 +41,33 @@ public class DepartmentController {
     }
 
     @GetMapping
-    @Operation(summary = "查询部门", description = "按名称和状态查询部门列表")
+    @Operation(summary = "查询部门", description = "按条件查询部门列表")
     public ApiResponse<List<DepartmentSummary>> queryDepartments(
-            @Parameter(description = "部门名称") @RequestParam(required = false) String name,
-            @Parameter(description = "状态") @RequestParam(required = false) String status) {
-        return ApiResponse.success(departmentService.queryDepartments(name, status));
+            @Parameter(description = "部门名称") @RequestParam(required = false) String deptName,
+            @Parameter(description = "部门状态") @RequestParam(required = false) String deptStatus) {
+        return ApiResponse.success(departmentService.queryDepartments(deptName, deptStatus));
     }
 
     @GetMapping("/{id}")
     @Operation(summary = "查询部门详情", description = "根据部门ID获取部门详情")
-    public ApiResponse<DepartmentDetailResponse> getDepartmentDetail(@Parameter(description = "部门ID") @PathVariable Long id) {
+    public ApiResponse<DepartmentDetailResponse> getDepartmentDetail(
+            @Parameter(description = "部门ID") @PathVariable Long id) {
         return ApiResponse.success(departmentService.getDepartmentDetail(id));
     }
 
     @GetMapping("/{id}/users")
     @Operation(summary = "查询部门用户", description = "查询部门下用户列表")
-    public ApiResponse<List<UserSummary>> queryDepartmentUsers(@Parameter(description = "部门ID") @PathVariable Long id) {
+    public ApiResponse<List<UserSummary>> queryDepartmentUsers(
+            @Parameter(description = "部门ID") @PathVariable Long id) {
         return ApiResponse.success(departmentService.queryDepartmentUsers(id));
     }
 
     @GetMapping("/export")
     @Operation(summary = "导出部门", description = "导出部门查询结果")
     public ResponseEntity<StreamingResponseBody> exportDepartments(
-            @Parameter(description = "部门名称") @RequestParam(required = false) String name,
-            @Parameter(description = "状态") @RequestParam(required = false) String status) {
-        List<DepartmentExportRow> rows = departmentService.buildDepartmentExport(name, status);
+            @Parameter(description = "部门名称") @RequestParam(required = false) String deptName,
+            @Parameter(description = "部门状态") @RequestParam(required = false) String deptStatus) {
+        List<DepartmentExportRow> rows = departmentService.buildDepartmentExport(deptName, deptStatus);
         String fileName = URLEncoder.encode("部门管理.xlsx", StandardCharsets.UTF_8);
         StreamingResponseBody body = outputStream -> EasyExcelFactory.write(outputStream, DepartmentExportRow.class)
                 .sheet("部门管理")
@@ -84,7 +86,7 @@ public class DepartmentController {
     }
 
     @GetMapping("/applications")
-    @Operation(summary = "查询部门申请(兼容)", description = "兼容前端按 /api/departments/applications 拉取待复核部门申请列表")
+    @Operation(summary = "查询部门申请(兼容)", description = "兼容 /api/departments/applications 查询待复核部门申请")
     public ApiResponse<List<DepartmentApplySummary>> queryDepartmentApplies(DepartmentApplyQueryRequest request) {
         return ApiResponse.success(departmentService.queryPendingDepartmentApplies(request));
     }

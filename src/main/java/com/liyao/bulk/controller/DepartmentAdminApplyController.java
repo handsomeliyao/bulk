@@ -6,7 +6,9 @@ import com.liyao.bulk.dto.AdminApplyExportRow;
 import com.liyao.bulk.dto.AdminApplyQueryRequest;
 import com.liyao.bulk.dto.AdminApplyReviewRequest;
 import com.liyao.bulk.dto.AdminApplySummary;
+import com.liyao.bulk.dto.AdminDetailResponse;
 import com.liyao.bulk.service.AdminService;
+import com.liyao.bulk.service.ApplyCompareService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import java.net.URLEncoder;
@@ -29,34 +31,27 @@ import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBo
 public class DepartmentAdminApplyController {
 
     private final AdminService adminService;
+    private final ApplyCompareService applyCompareService;
 
-    public DepartmentAdminApplyController(AdminService adminService) {
+    public DepartmentAdminApplyController(AdminService adminService,
+                                          ApplyCompareService applyCompareService) {
         this.adminService = adminService;
+        this.applyCompareService = applyCompareService;
     }
 
     @GetMapping
-    @Operation(summary = "查询管理员申请", description = "按条件查询部门管理员申请列表")
-    /**
-     * 菜单: 用户与权限管理-部门管理员申请管理-已复核查询/待复核查询
-     * 功能: 查询部门管理员申请
-     * 示例: /api/department-admin-applications
-     */
+    @Operation(summary = "查询管理员申请", description = "按条件查询管理员申请列表")
     public ApiResponse<List<AdminApplySummary>> queryApplies(AdminApplyQueryRequest request) {
         return ApiResponse.success(adminService.queryAdminApplies(request));
     }
 
     @GetMapping("/export")
-    @Operation(summary = "导出管理员申请", description = "导出部门管理员申请查询结果")
-    /**
-     * 菜单: 用户与权限管理-部门管理员申请管理-下载
-     * 功能: 导出部门管理员申请
-     * 示例: /api/department-admin-applications/export
-     */
+    @Operation(summary = "导出管理员申请", description = "导出管理员申请列表为 Excel")
     public ResponseEntity<StreamingResponseBody> exportApplies(AdminApplyQueryRequest request) {
         List<AdminApplyExportRow> rows = adminService.buildApplyExport(request);
-        String fileName = URLEncoder.encode("部门管理员申请信息.xlsx", StandardCharsets.UTF_8);
+        String fileName = URLEncoder.encode("管理员申请导出.xlsx", StandardCharsets.UTF_8);
         StreamingResponseBody body = outputStream -> EasyExcelFactory.write(outputStream, AdminApplyExportRow.class)
-                .sheet("部门管理员申请信息")
+                .sheet("管理员申请导出")
                 .doWrite(rows);
         return ResponseEntity.ok()
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename*=UTF-8''" + fileName)
@@ -65,12 +60,7 @@ public class DepartmentAdminApplyController {
     }
 
     @PostMapping("/{id}/revoke")
-    @Operation(summary = "撤销管理员申请", description = "撤销指定的部门管理员申请")
-    /**
-     * 菜单: 用户与权限管理-部门管理员申请管理-撤销
-     * 功能: 撤销部门管理员申请
-     * 示例: /api/department-admin-applications/{id}/revoke
-     */
+    @Operation(summary = "撤销管理员申请", description = "撤销指定管理员申请")
     public ApiResponse<Void> revokeApply(@Parameter(description = "申请ID") @PathVariable Long id,
                                          @Parameter(description = "操作人ID") @RequestParam Long operatorId) {
         adminService.revokeApply(id, operatorId);
@@ -78,15 +68,16 @@ public class DepartmentAdminApplyController {
     }
 
     @PostMapping("/{id}/review")
-    @Operation(summary = "审核管理员申请", description = "审核部门管理员申请并提交结果")
-    /**
-     * 菜单: 用户与权限管理-部门管理员申请管理-录入复核
-     * 功能: 复核部门管理员申请
-     * 示例: /api/department-admin-applications/{id}/review
-     */
+    @Operation(summary = "复核管理员申请", description = "复核指定管理员申请")
     public ApiResponse<Void> reviewApply(@Parameter(description = "申请ID") @PathVariable Long id,
                                          @RequestBody AdminApplyReviewRequest request) {
         adminService.reviewApply(id, request);
         return ApiResponse.success();
+    }
+
+    @GetMapping("/{id}/compare")
+    @Operation(summary = "比对管理员申请与正式数据", description = "返回未修改字段的正式值，已修改字段返回空")
+    public ApiResponse<AdminDetailResponse> compareApply(@Parameter(description = "申请ID") @PathVariable Long id) {
+        return ApiResponse.success(applyCompareService.compareAdmin(id));
     }
 }

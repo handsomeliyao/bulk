@@ -30,13 +30,13 @@ public class DepartmentService {
     private static final String STATUS_NORMAL = "NORMAL";
     private static final String STATUS_CANCELED = "CANCELED";
 
-    // 部门申请状态枚举：待复核、复核通过、复核拒绝、已撤销
+    // 閮ㄩ棬鐢宠鐘舵€佹灇涓撅細寰呭鏍搞€佸鏍搁€氳繃銆佸鏍告嫆缁濄€佸凡鎾ら攢
     private static final String APPLY_PENDING = "PENDING";
     private static final String APPLY_APPROVED = "APPROVED";
     private static final String APPLY_REJECTED = "REJECTED";
     private static final String APPLY_CANCELED = "CANCELED";
 
-    // 待复核分页可查询状态：待复核、复核通过、复核拒绝、已撤销
+    // 寰呭鏍稿垎椤靛彲鏌ヨ鐘舵€侊細寰呭鏍搞€佸鏍搁€氳繃銆佸鏍告嫆缁濄€佸凡鎾ら攢
     private static final List<String> DEPARTMENT_PENDING_STATUSES = List.of(
             APPLY_PENDING,
             APPLY_REJECTED,
@@ -82,7 +82,7 @@ public class DepartmentService {
     public DepartmentDetailResponse getDepartmentDetail(Long id) {
         Department department = departmentMapper.selectById(id);
         if (department == null) {
-            throw new BusinessException("Department not found");
+            throw new BusinessException("部门不存在");
         }
         DepartmentDetailResponse response = new DepartmentDetailResponse();
         response.setId(department.getId());
@@ -112,15 +112,18 @@ public class DepartmentService {
     public void createDepartmentApply(DepartmentCreateRequest request) {
         validateDepartmentRequest(request.getDeptName());
         CurrentLoginUser applicant = loginUserCacheService.getRequiredCurrentUser();
+        if (departmentApplyMapper.countPendingByDeptName(request.getDeptName()) > 0) {
+            throw new BusinessException("已存在待复核申请");
+        }
         Department existing = departmentMapper.selectByName(request.getDeptName());
         if (existing != null) {
-            throw new BusinessException("Department name already exists");
+            throw new BusinessException("部门名称已存在");
         }
         DepartmentApply apply = buildApply(request.getDeptName(), request.getRemark(), null,
                 STATUS_NORMAL, OP_ADD, applicant);
         departmentApplyMapper.insert(apply);
         if (apply.getId() == null) {
-            throw new BusinessException("Apply id is missing after insert");
+            throw new BusinessException("申请记录新增后未生成申请ID");
         }
         departmentApplyMapper.updateDeptId(apply.getId(), apply.getId());
         apply.setDeptId(apply.getId());
@@ -133,17 +136,17 @@ public class DepartmentService {
         CurrentLoginUser applicant = loginUserCacheService.getRequiredCurrentUser();
         Department department = requireDepartment(deptId);
         if (!STATUS_NORMAL.equals(department.getDeptStatus())) {
-            throw new BusinessException("Department status does not allow modification");
+            throw new BusinessException("当前部门状态不允许修改");
         }
         if (departmentApplyMapper.countPendingByDeptId(deptId) > 0) {
-            throw new BusinessException("Pending applications exist");
+            throw new BusinessException("已存在待复核申请");
         }
         Department existing = departmentMapper.selectByName(request.getDeptName());
         if (existing != null && !existing.getId().equals(deptId)) {
-            throw new BusinessException("Department name already exists");
+            throw new BusinessException("部门名称已存在");
         }
         if (!hasDepartmentChanges(department, request)) {
-            throw new BusinessException("No changes to apply");
+            throw new BusinessException("未检测到变更内容");
         }
         DepartmentApply apply = buildApply(request.getDeptName(), request.getRemark(), deptId, department.getDeptStatus(), OP_MODIFY, applicant);
         departmentApplyMapper.insert(apply);
@@ -154,10 +157,10 @@ public class DepartmentService {
         CurrentLoginUser applicant = loginUserCacheService.getRequiredCurrentUser();
         Department department = requireDepartment(deptId);
         if (!STATUS_NORMAL.equals(department.getDeptStatus())) {
-            throw new BusinessException("Department status does not allow cancel");
+            throw new BusinessException("当前部门状态不允许注销");
         }
         if (departmentApplyMapper.countPendingByDeptId(deptId) > 0) {
-            throw new BusinessException("Pending applications exist");
+            throw new BusinessException("已存在待复核申请");
         }
         DepartmentApply apply = new DepartmentApply();
         apply.setArrNo(generateApplyNo());
@@ -165,8 +168,7 @@ public class DepartmentService {
         apply.setDeptName(department.getDeptName());
         apply.setRemark(department.getRemark());
         apply.setOperType(OP_CANCEL);
-        // 申请创建时默认状态：待复核
-        apply.setOperStatus(APPLY_PENDING);
+        // 鐢宠鍒涘缓鏃堕粯璁ょ姸鎬侊細寰呭鏍?        apply.setOperStatus(APPLY_PENDING);
         apply.setDeptStatus(department.getDeptStatus());
         fillApplicantInfo(apply, applicant);
         departmentApplyMapper.insert(apply);
@@ -178,6 +180,35 @@ public class DepartmentService {
 
     public List<DepartmentApplySummary> queryReviewedDepartmentApplies(DepartmentApplyQueryRequest request) {
         return queryDepartmentAppliesByStatuses(request, DEPARTMENT_REVIEWED_STATUSES);
+    }
+
+    public DepartmentApplyDetailResponse getApplyDetailByArrNo(String arrNo) {
+        if (arrNo == null || arrNo.isBlank()) {
+            throw new BusinessException("申请编号不能为空");
+        }
+        DepartmentApply apply = departmentApplyMapper.selectByArrNo(arrNo);
+        if (apply == null) {
+            throw new BusinessException("申请记录不存在");
+        }
+        DepartmentApplyDetailResponse response = new DepartmentApplyDetailResponse();
+        response.setId(apply.getId());
+        response.setArrNo(apply.getArrNo());
+        response.setDeptId(apply.getDeptId());
+        response.setDeptName(apply.getDeptName());
+        response.setRemark(apply.getRemark());
+        response.setOperType(apply.getOperType());
+        response.setArrStatus(apply.getOperStatus());
+        response.setDeptStatus(apply.getDeptStatus());
+        response.setArrOperCode(apply.getOperCode());
+        response.setArrOperName(apply.getOperName());
+        response.setArrDate(apply.getArrDate());
+        response.setReviewOperCode(apply.getReviewOperCode());
+        response.setReviewOperName(apply.getReviewOperName());
+        response.setReviewTime(apply.getReviewTime());
+        DepartmentAuth auth = resolveDepartmentAuth(apply.getDeptId());
+        response.setAssignAuth(auth.assignAuth());
+        response.setOperAuth(auth.operAuth());
+        return response;
     }
 
     @Transactional
@@ -197,43 +228,84 @@ public class DepartmentService {
     @Transactional
     public void reviewApply(DepartmentApplyApproveRequest request) {
         if (request == null || request.getApplyId() == null) {
-            throw new BusinessException("Apply id is required");
+            throw new BusinessException("申请ID不能为空");
         }
-        validateDepartmentRequest(request.getDeptName());
         CurrentLoginUser reviewer = loginUserCacheService.getRequiredCurrentUser();
         DepartmentApply apply = requireApply(request.getApplyId());
         Long applyDeptId = apply.getDeptId();
         if (!APPLY_PENDING.equals(apply.getOperStatus())) {
-            throw new BusinessException("Only pending applies can be reviewed");
+            throw new BusinessException("仅待复核申请可执行复核");
         }
         if (Objects.equals(apply.getOperCode(), reviewer.getLoginOperCode())) {
-            throw new BusinessException("Cannot review your own apply");
+            throw new BusinessException("不能复核自己提交的申请");
         }
-        if (!OP_ADD.equals(apply.getOperType())) {
-            throw new BusinessException("Only ADD apply is supported for this review API");
+        boolean approved = request.getApproved() == null || request.getApproved();
+        if (!approved) {
+            departmentApplyMapper.updateStatus(
+                    apply.getId(),
+                    APPLY_REJECTED,
+                    reviewer.getOperCode(),
+                    reviewer.getOperName(),
+                    LocalDateTime.now(),
+                    request.getReviewRemark()
+            );
+            return;
         }
-        if (!Objects.equals(apply.getDeptName(), request.getDeptName())
-                || !Objects.equals(apply.getRemark(), request.getRemark())) {
-            throw new BusinessException("Review data does not match apply data");
+        if (!OP_ADD.equals(apply.getOperType())
+                && !OP_MODIFY.equals(apply.getOperType())
+                && !OP_CANCEL.equals(apply.getOperType())) {
+            throw new BusinessException("仅支持新增/修改/注销类型申请通过复核");
         }
 
-        Department department = new Department();
-        department.setDeptName(request.getDeptName());
-        department.setRemark(request.getRemark());
-        department.setDeptStatus(apply.getDeptStatus());
-        department.setCreatedOperName(reviewer.getOperName());
-        department.setCreatedAt(LocalDateTime.now());
-        department.setUpdatedOperName(reviewer.getOperName());
-        department.setUpdatedAt(LocalDateTime.now());
-        department.setReviewOperName(reviewer.getOperName());
-        department.setReviewTime(LocalDateTime.now());
-        departmentMapper.insert(department);
-
-        if (department.getId() != null) {
-            departmentApplyMapper.updateDeptId(apply.getId(), department.getId());
-            if (applyDeptId != null && !applyDeptId.equals(department.getId())) {
-                departmentButtonPermissionMapper.updateDeptId(applyDeptId, department.getId());
+        if (OP_ADD.equals(apply.getOperType())) {
+            validateDepartmentRequest(request.getDeptName());
+            if (!Objects.equals(apply.getDeptName(), request.getDeptName())
+                    || !Objects.equals(apply.getRemark(), request.getRemark())) {
+                throw new BusinessException("复核数据与申请数据不一致");
             }
+            Department department = new Department();
+            department.setDeptName(request.getDeptName());
+            department.setRemark(request.getRemark());
+            department.setDeptStatus(apply.getDeptStatus());
+            department.setCreatedOperName(apply.getOperName());
+            department.setCreatedAt(apply.getArrDate());
+            department.setUpdatedOperName(apply.getOperName());
+            department.setUpdatedAt(apply.getArrDate());
+            department.setReviewOperName(reviewer.getOperName());
+            department.setReviewTime(LocalDateTime.now());
+            departmentMapper.insert(department);
+
+            if (department.getId() != null) {
+                departmentApplyMapper.updateDeptId(apply.getId(), department.getId());
+                if (applyDeptId != null && !applyDeptId.equals(department.getId())) {
+                    departmentButtonPermissionMapper.updateDeptId(applyDeptId, department.getId());
+                }
+                replaceDeptButtonPermissions(department.getId(), request.getAssignAuth(), request.getOperAuth());
+            }
+        } else if (OP_MODIFY.equals(apply.getOperType())) {
+            validateDepartmentRequest(request.getDeptName());
+            if (!Objects.equals(apply.getDeptName(), request.getDeptName())
+                    || !Objects.equals(apply.getRemark(), request.getRemark())) {
+                throw new BusinessException("复核数据与申请数据不一致");
+            }
+            Department department = requireDepartment(apply.getDeptId());
+            department.setDeptName(request.getDeptName());
+            department.setRemark(request.getRemark());
+            department.setDeptStatus(apply.getDeptStatus());
+            department.setUpdatedOperName(apply.getOperName());
+            department.setUpdatedAt(apply.getArrDate());
+            department.setReviewOperName(reviewer.getOperName());
+            department.setReviewTime(LocalDateTime.now());
+            departmentMapper.update(department);
+            replaceDeptButtonPermissions(department.getId(), request.getAssignAuth(), request.getOperAuth());
+        } else {
+            Department department = requireDepartment(apply.getDeptId());
+            department.setDeptStatus(STATUS_CANCELED);
+            department.setUpdatedOperName(apply.getOperName());
+            department.setUpdatedAt(apply.getArrDate());
+            department.setReviewOperName(reviewer.getOperName());
+            department.setReviewTime(LocalDateTime.now());
+            departmentMapper.update(department);
         }
         departmentApplyMapper.updateStatus(
                 apply.getId(),
@@ -296,7 +368,7 @@ public class DepartmentService {
                                            List<ButtonAuthItem> assignAuth,
                                            List<ButtonAuthItem> operAuth) {
         if (deptId == null) {
-            throw new BusinessException("Department id is required for permission persistence");
+            throw new BusinessException("保存权限时部门ID不能为空");
         }
         List<DepartmentButtonPermission> items = new java.util.ArrayList<>();
         Set<String> dedup = new LinkedHashSet<>();
@@ -305,6 +377,16 @@ public class DepartmentService {
         if (!items.isEmpty()) {
             departmentButtonPermissionMapper.insertBatch(items);
         }
+    }
+
+    private void replaceDeptButtonPermissions(Long deptId,
+                                              List<ButtonAuthItem> assignAuth,
+                                              List<ButtonAuthItem> operAuth) {
+        if (deptId == null) {
+            throw new BusinessException("保存权限时部门ID不能为空");
+        }
+        departmentButtonPermissionMapper.deleteByDeptId(deptId);
+        saveDeptButtonPermissions(deptId, assignAuth, operAuth);
     }
 
     private void appendPermissions(List<DepartmentButtonPermission> items,
@@ -341,8 +423,7 @@ public class DepartmentService {
         apply.setDeptName(name);
         apply.setRemark(remark);
         apply.setOperType(operationType);
-        // 申请创建时默认状态：待复核
-        apply.setOperStatus(APPLY_PENDING);
+        // 鐢宠鍒涘缓鏃堕粯璁ょ姸鎬侊細寰呭鏍?        apply.setOperStatus(APPLY_PENDING);
         apply.setDeptStatus(deptStatus);
         fillApplicantInfo(apply, applicant);
         return apply;
@@ -357,7 +438,7 @@ public class DepartmentService {
     private Department requireDepartment(Long deptId) {
         Department department = departmentMapper.selectById(deptId);
         if (department == null) {
-            throw new BusinessException("Department not found");
+            throw new BusinessException("部门不存在");
         }
         return department;
     }
@@ -365,7 +446,7 @@ public class DepartmentService {
     private DepartmentApply requireApply(Long applyId) {
         DepartmentApply apply = departmentApplyMapper.selectById(applyId);
         if (apply == null) {
-            throw new BusinessException("Apply record not found");
+            throw new BusinessException("申请记录不存在");
         }
         return apply;
     }
@@ -440,31 +521,8 @@ public class DepartmentService {
 
     private void validateDepartmentRequest(String name) {
         if (name == null || name.trim().isEmpty()) {
-            throw new BusinessException("Department name is required");
+            throw new BusinessException("部门名称不能为空");
         }
-    }
-
-    private List<String> resolveApplyStatuses(String statusType) {
-        // 待复核分页支持状态筛选：PENDING/REJECTED/CANCELED
-        if (statusType == null || statusType.isBlank()) {
-            return DEPARTMENT_PENDING_STATUSES;
-        }
-        if ("PENDING".equalsIgnoreCase(statusType)) {
-            return List.of(APPLY_PENDING);
-        }
-        if ("REJECTED".equalsIgnoreCase(statusType)) {
-            return List.of(APPLY_REJECTED);
-        }
-        if ("APPROVED".equalsIgnoreCase(statusType)) {
-            return List.of(APPLY_APPROVED);
-        }
-        if ("CANCELED".equalsIgnoreCase(statusType)) {
-            return List.of(APPLY_CANCELED);
-        }
-        if ("REVIEWED".equalsIgnoreCase(statusType)) {
-            return List.of(APPLY_APPROVED, APPLY_REJECTED, APPLY_CANCELED);
-        }
-        throw new BusinessException("Invalid apply status type");
     }
 
     private LocalDateTime parseStartTime(String startDate) {
@@ -489,3 +547,4 @@ public class DepartmentService {
         return timestamp + random;
     }
 }
+

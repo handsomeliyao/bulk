@@ -15,9 +15,15 @@ public class DepartmentApplyApproveRequest {
     @Schema(description = "备注")
     private String remark;
 
-    @Schema(description = "授权范围")
+    @Schema(description = "授权权限")
     private List<ButtonAuthItem> assignAuth;
 
-    @Schema(description = "操作范围")
+    @Schema(description = "操作权限")
     private List<ButtonAuthItem> operAuth;
+
+    @Schema(description = "是否通过，默认true")
+    private Boolean approved;
+
+    @Schema(description = "复核意见")
+    private String reviewRemark;
 }

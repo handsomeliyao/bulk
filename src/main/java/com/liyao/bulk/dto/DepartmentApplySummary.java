@@ -1,5 +1,6 @@
 package com.liyao.bulk.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.LocalDateTime;
 import lombok.Data;
@@ -24,7 +25,7 @@ public class DepartmentApplySummary {
     @Schema(description = "操作类型")
     private String operType;
 
-    @Schema(description = "申请状态：PENDING(待复核)、REJECTED(复核拒绝)、CANCELED(已撤销)")
+    @Schema(description = "申请状态")
     private String arrStatus;
 
     @Schema(description = "部门状态")
@@ -37,6 +38,7 @@ public class DepartmentApplySummary {
     private String arrOperCode;
 
     @Schema(description = "申请时间")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime arrDate;
 
     @Schema(description = "复核人姓名")
@@ -46,5 +48,6 @@ public class DepartmentApplySummary {
     private Long reviewOperCode;
 
     @Schema(description = "复核时间")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime reviewTime;
 }

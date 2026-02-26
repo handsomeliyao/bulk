@@ -30,6 +30,15 @@
         WHERE id = #{id}
     </select>
 
+    <select id="selectByArrNo" resultMap="DepartmentApplyMap">
+        SELECT id, arr_no, dept_id, dept_name, remark, oper_type, arr_status,
+               arr_oper_code, arr_oper_name, arr_date, review_oper_code, review_oper_name, review_time,
+               dept_status
+        FROM department_apply
+        WHERE arr_no = #{arrNo}
+        LIMIT 1
+    </select>
+
     <insert id="insert" useGeneratedKeys="true" keyProperty="id">
         INSERT INTO department_apply (
             arr_no, dept_id, dept_name, remark, oper_type, arr_status,
@@ -102,6 +111,11 @@
     <select id="countPendingByDeptId" resultType="int">
         SELECT COUNT(1) FROM department_apply
         WHERE dept_id = #{deptId} AND arr_status = 'PENDING'
+    </select>
+
+    <select id="countPendingByDeptName" resultType="int">
+        SELECT COUNT(1) FROM department_apply
+        WHERE dept_name = #{deptName} AND arr_status = 'PENDING'
     </select>
 </mapper>
 

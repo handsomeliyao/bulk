@@ -48,11 +48,11 @@ public class LoginUserCacheService {
 
     public void cacheLoginUser(String token, CurrentLoginUser user) {
         if (token == null || token.isBlank()) {
-            throw new BusinessException("Login token is required");
+            throw new BusinessException("登录令牌不能为空");
         }
         if (user == null || user.getOperCode() == null || user.getOperName() == null || user.getOperName().isBlank()
                 || user.getLoginOperCode() == null || user.getLoginOperCode().isBlank()) {
-            throw new BusinessException("Login user is invalid");
+            throw new BusinessException("登录用户信息无效");
         }
         Map<String, Object> payload = new HashMap<>();
         payload.put("userId", user.getOperCode());
@@ -65,7 +65,7 @@ public class LoginUserCacheService {
             stringRedisTemplate.opsForValue().set(cacheKeyPrefix + token, raw, Duration.ofSeconds(expireSeconds));
             localCache.put(token, new LocalCacheEntry(user, expireSeconds));
         } catch (Exception ex) {
-            throw new BusinessException("Failed to cache login user");
+            throw new BusinessException("缓存登录用户信息失败");
         }
     }
 
@@ -76,7 +76,7 @@ public class LoginUserCacheService {
         if (raw == null || raw.isBlank()) {
             CurrentLoginUser cached = getLocalUser(token);
             if (cached == null) {
-                throw new BusinessException("Login info expired, please login again");
+                throw new BusinessException("登录信息已过期，请重新登录");
             }
             return cached;
         }
@@ -92,13 +92,13 @@ public class LoginUserCacheService {
             String loginOperCode = resolveText(root, "operCode", "loginOperCode", "userCode", "user_code");
             if (userId == null || userName == null || userName.isBlank()
                     || loginOperCode == null || loginOperCode.isBlank()) {
-                throw new BusinessException("Cached login user is incomplete");
+                throw new BusinessException("缓存的登录用户信息不完整");
             }
             return new CurrentLoginUser(userId, userName, deptId, deptName, loginOperCode);
         } catch (BusinessException ex) {
             throw ex;
         } catch (Exception ex) {
-            throw new BusinessException("Cached login user format is invalid");
+            throw new BusinessException("缓存的登录用户信息格式无效");
         }
     }
 
@@ -118,7 +118,7 @@ public class LoginUserCacheService {
     private HttpServletRequest currentRequest() {
         RequestAttributes attributes = RequestContextHolder.getRequestAttributes();
         if (!(attributes instanceof ServletRequestAttributes servletRequestAttributes)) {
-            throw new BusinessException("Cannot resolve current request");
+            throw new BusinessException("无法获取当前请求");
         }
         return servletRequestAttributes.getRequest();
     }
@@ -134,7 +134,7 @@ public class LoginUserCacheService {
     private String resolveToken(HttpServletRequest request) {
         String token = resolveTokenIfPresent(request);
         if (token == null || token.isBlank()) {
-            throw new BusinessException("Missing login token");
+            throw new BusinessException("缺少登录令牌");
         }
         return token;
     }
@@ -248,3 +248,4 @@ public class LoginUserCacheService {
         return new JsonNode[]{root, user, userInfo, data};
     }
 }
+

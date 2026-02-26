@@ -45,3 +45,13 @@ springdoc:
   swagger-ui:
     enabled: true
     path: /swagger-ui.html
+
+bulk:
+  login-user:
+    expire-seconds: 1800
+  auth:
+    login-page: https://bulk.iambeyouare.com/login
+    expired-message: 用户信息已过期，请重新登录
+    whitelist:
+      - /api/auth/login
+      - /api/auth/logout
