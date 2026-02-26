@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.liyao.bulk.mapper.DepartmentButtonPermissionMapper">
+
+    <resultMap id="DepartmentButtonPermissionMap" type="com.liyao.bulk.model.DepartmentButtonPermission">
+        <id column="id" property="id"/>
+        <result column="dept_id" property="deptId"/>
+        <result column="btn_id" property="btnId"/>
+        <result column="permission_type" property="permissionType"/>
+        <result column="created_at" property="createdAt"/>
+    </resultMap>
+
+    <select id="selectByDeptId" resultMap="DepartmentButtonPermissionMap">
+        SELECT id, dept_id, btn_id, permission_type, created_at
+        FROM dept_btn
+        WHERE dept_id = #{deptId}
+        ORDER BY id ASC
+    </select>
+
+    <insert id="insertBatch">
+        INSERT INTO dept_btn (dept_id, btn_id, permission_type, created_at)
+        VALUES
+        <foreach collection="items" item="item" separator=",">
+            (#{item.deptId}, #{item.btnId}, #{item.permissionType}, #{item.createdAt})
+        </foreach>
+        ON DUPLICATE KEY UPDATE created_at = VALUES(created_at)
+    </insert>
+
+    <update id="updateDeptId">
+        UPDATE dept_btn
+        SET dept_id = #{targetDeptId}
+        WHERE dept_id = #{sourceDeptId}
+    </update>
+
+    <delete id="deleteByDeptId">
+        DELETE FROM dept_btn
+        WHERE dept_id = #{deptId}
+    </delete>
+
+</mapper>
