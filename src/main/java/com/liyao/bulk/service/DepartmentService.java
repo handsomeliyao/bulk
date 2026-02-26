@@ -116,9 +116,14 @@ public class DepartmentService {
         if (existing != null) {
             throw new BusinessException("Department name already exists");
         }
-        DepartmentApply apply = buildApply(request.getDeptName(), request.getRemark(), applicant.getApplicantDeptId(),
+        DepartmentApply apply = buildApply(request.getDeptName(), request.getRemark(), null,
                 STATUS_NORMAL, OP_ADD, applicant);
         departmentApplyMapper.insert(apply);
+        if (apply.getId() == null) {
+            throw new BusinessException("Apply id is missing after insert");
+        }
+        departmentApplyMapper.updateDeptId(apply.getId(), apply.getId());
+        apply.setDeptId(apply.getId());
         saveDeptButtonPermissions(apply.getDeptId(), request.getAssignAuth(), request.getOperAuth());
     }
 
@@ -197,6 +202,7 @@ public class DepartmentService {
         validateDepartmentRequest(request.getDeptName());
         CurrentLoginUser reviewer = loginUserCacheService.getRequiredCurrentUser();
         DepartmentApply apply = requireApply(request.getApplyId());
+        Long applyDeptId = apply.getDeptId();
         if (!APPLY_PENDING.equals(apply.getOperStatus())) {
             throw new BusinessException("Only pending applies can be reviewed");
         }
@@ -225,6 +231,9 @@ public class DepartmentService {
 
         if (department.getId() != null) {
             departmentApplyMapper.updateDeptId(apply.getId(), department.getId());
+            if (applyDeptId != null && !applyDeptId.equals(department.getId())) {
+                departmentButtonPermissionMapper.updateDeptId(applyDeptId, department.getId());
+            }
         }
         departmentApplyMapper.updateStatus(
                 apply.getId(),

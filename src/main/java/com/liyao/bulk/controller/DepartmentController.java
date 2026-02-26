@@ -6,6 +6,8 @@ import com.liyao.bulk.dto.DepartmentCancelRequest;
 import com.liyao.bulk.dto.DepartmentCreateRequest;
 import com.liyao.bulk.dto.DepartmentDetailResponse;
 import com.liyao.bulk.dto.DepartmentExportRow;
+import com.liyao.bulk.dto.DepartmentApplyQueryRequest;
+import com.liyao.bulk.dto.DepartmentApplySummary;
 import com.liyao.bulk.dto.DepartmentModifyRequest;
 import com.liyao.bulk.dto.DepartmentSummary;
 import com.liyao.bulk.dto.UserSummary;
@@ -79,6 +81,12 @@ public class DepartmentController {
     public ApiResponse<Void> createDepartment(@RequestBody DepartmentCreateRequest request) {
         departmentService.createDepartmentApply(request);
         return ApiResponse.success();
+    }
+
+    @GetMapping("/applications")
+    @Operation(summary = "查询部门申请(兼容)", description = "兼容前端按 /api/departments/applications 拉取待复核部门申请列表")
+    public ApiResponse<List<DepartmentApplySummary>> queryDepartmentApplies(DepartmentApplyQueryRequest request) {
+        return ApiResponse.success(departmentService.queryPendingDepartmentApplies(request));
     }
 
     @PutMapping("/{id}/applications")

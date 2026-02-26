@@ -4,15 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="a9bacdf6-5fa7-4626-8472-f05e55c81eae" name="更改" comment="修改表格日强格式为短横杠">
+    <list default="true" id="a9bacdf6-5fa7-4626-8472-f05e55c81eae" name="更改" comment="修改部门新增未保存操作权限和授权权限数据">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/logs/bulk-commodity-platform.log" beforeDir="false" afterPath="$PROJECT_DIR$/logs/bulk-commodity-platform.log" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/config/JacksonConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/config/JacksonConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/dto/DepartmentDetailResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/dto/DepartmentDetailResponse.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/dto/DepartmentSummary.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/dto/DepartmentSummary.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/controller/DepartmentController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/controller/DepartmentController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/service/DepartmentService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/service/DepartmentService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/service/LoginUserCacheService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/service/LoginUserCacheService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/sql/init.sql" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/sql/init.sql" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -172,7 +168,7 @@
       <workItem from="1771996752272" duration="1510000" />
       <workItem from="1771998877874" duration="657000" />
       <workItem from="1772000323140" duration="19601000" />
-      <workItem from="1772082835575" duration="308000" />
+      <workItem from="1772082835575" duration="1485000" />
     </task>
     <task id="LOCAL-00001" summary="代码提交">
       <option name="closed" value="true" />
@@ -190,7 +186,15 @@
       <option name="project" value="LOCAL" />
       <updated>1772072579059</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="修改部门新增未保存操作权限和授权权限数据">
+      <option name="closed" value="true" />
+      <created>1772083234272</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1772083234272</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -222,7 +226,8 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="代码提交" />
     <MESSAGE value="修改表格日强格式为短横杠" />
-    <option name="LAST_COMMIT_MESSAGE" value="修改表格日强格式为短横杠" />
+    <MESSAGE value="修改部门新增未保存操作权限和授权权限数据" />
+    <option name="LAST_COMMIT_MESSAGE" value="修改部门新增未保存操作权限和授权权限数据" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
