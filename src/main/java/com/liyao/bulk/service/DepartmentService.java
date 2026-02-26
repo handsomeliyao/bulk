@@ -35,9 +35,11 @@ public class DepartmentService {
     // 待复核分页可查询状态：待复核、复核通过、复核拒绝、已撤销
     private static final List<String> DEPARTMENT_PENDING_STATUSES = List.of(
             APPLY_PENDING,
-            APPLY_APPROVED,
             APPLY_REJECTED,
             APPLY_CANCELED
+    );
+    private static final List<String> DEPARTMENT_REVIEWED_STATUSES = List.of(
+            APPLY_APPROVED
     );
 
     private static final String OP_ADD = "ADD";
@@ -148,20 +150,12 @@ public class DepartmentService {
         departmentApplyMapper.insert(apply);
     }
 
-    public List<DepartmentApplySummary> queryDepartmentApplies(DepartmentApplyQueryRequest request) {
-        List<DepartmentApplySummary> summaries = ApplyQuerySupport.queryAppliesNoDept(
-                request,
-                DepartmentApplyQueryRequest::getStatusType,
-                DepartmentApplyQueryRequest::getStartDate,
-                DepartmentApplyQueryRequest::getEndDate,
-                DepartmentApplyQueryRequest::getArrNo,
-                DepartmentApplyQueryRequest::getDeptName,
-                DepartmentApplyQueryRequest::getOperType,
-                this::resolveApplyStatuses,
-                this::parseStartTime,
-                this::parseEndTime,
-                departmentApplyMapper::selectByCondition);
-        return summaries;
+    public List<DepartmentApplySummary> queryPendingDepartmentApplies(DepartmentApplyQueryRequest request) {
+        return queryDepartmentAppliesByStatuses(request, DEPARTMENT_PENDING_STATUSES);
+    }
+
+    public List<DepartmentApplySummary> queryReviewedDepartmentApplies(DepartmentApplyQueryRequest request) {
+        return queryDepartmentAppliesByStatuses(request, DEPARTMENT_REVIEWED_STATUSES);
     }
 
     @Transactional
@@ -243,7 +237,7 @@ public class DepartmentService {
     }
 
     public List<DepartmentApplyExportRow> buildApplyExport(DepartmentApplyQueryRequest request) {
-        return queryDepartmentApplies(request).stream().map(item -> {
+        return queryPendingDepartmentApplies(request).stream().map(item -> {
             DepartmentApplyExportRow row = new DepartmentApplyExportRow();
             row.setArrNo(item.getArrNo());
             row.setDeptName(item.getDeptName());
@@ -256,6 +250,20 @@ public class DepartmentService {
             row.setReviewTime(item.getReviewTime());
             return row;
         }).toList();
+    }
+
+    private List<DepartmentApplySummary> queryDepartmentAppliesByStatuses(DepartmentApplyQueryRequest request,
+                                                                           List<String> statuses) {
+        LocalDateTime startTime = parseStartTime(request.getStartDate());
+        LocalDateTime endTime = parseEndTime(request.getEndDate());
+        return departmentApplyMapper.selectByCondition(
+                statuses,
+                startTime,
+                endTime,
+                request.getArrNo(),
+                request.getDeptName(),
+                request.getOperType()
+        );
     }
 
 

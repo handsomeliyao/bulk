@@ -5,206 +5,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="a9bacdf6-5fa7-4626-8472-f05e55c81eae" name="更改" comment="代码提交">
-      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/copilot.data.migration.ask2agent.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/dataSources.local.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/dataSources.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/dataSources/8665af93-34de-40ac-a6d6-501b41130a68.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/dataSources/8665af93-34de-40ac-a6d6-501b41130a68/storage_v2/_src_/schema/information_schema.FNRwLQ.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/dataSources/8665af93-34de-40ac-a6d6-501b41130a68/storage_v2/_src_/schema/performance_schema.kIw0nw.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/dataSources/a825b123-0168-4b6b-b91f-764aded12753.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/dataSources/a825b123-0168-4b6b-b91f-764aded12753/storage_v2/_src_/schema/information_schema.FNRwLQ.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/dataSources/a825b123-0168-4b6b-b91f-764aded12753/storage_v2/_src_/schema/mysql.osA4Bg.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/dataSources/a825b123-0168-4b6b-b91f-764aded12753/storage_v2/_src_/schema/performance_schema.kIw0nw.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/dataSources/a825b123-0168-4b6b-b91f-764aded12753/storage_v2/_src_/schema/sys.zb4BAA.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/data_source_mapping.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/db-forest-config.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/jarRepositories.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/setting.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/sqldialects.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.mvn/wrapper/maven-wrapper.properties" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.tmp_seed_all_tables_bulk.sql" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.tmp_seed_department_post_full_fields.sql" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.tmp_seed_department_post_more.sql" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.tmp_seed_more_test_data.sql" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.tmp_seed_remote_test_data.sql" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.tmp_seed_test_data.sql" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/doc/permission.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/doc/内部岗位管理.docx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/doc/内部岗位管理.docx.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/doc/部门操作员维护.docx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/doc/部门操作员维护.docx.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/doc/部门管理.docx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/doc/部门管理.docx.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/doc/部门管理员维护.docx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/doc/部门管理员维护.docx.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/logs/bulk-commodity-platform.2026-02-11.log" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/logs/bulk-commodity-platform.2026-02-12.log" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/logs/bulk-commodity-platform.2026-02-24.log" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/logs/bulk-commodity-platform.log" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/mvnw" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/mvnw.cmd" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/BulkApplication.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/aop/RequestLogAspect.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/common/ApiResponse.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/common/BusinessException.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/common/GlobalExceptionHandler.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/config/AsyncConfig.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/config/JacksonConfig.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/config/WebAsyncConfig.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/controller/AuthController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/controller/DepartmentAdminApplyController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/controller/DepartmentAdminController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/controller/DepartmentApplyController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/controller/DepartmentController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/controller/DepartmentOperatorApplyController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/controller/DepartmentOperatorController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/controller/InternalPositionController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/controller/MenuController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/controller/PermissionController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/controller/PositionApplyController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/dto/AdminActionRequest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/dto/AdminApplyExportRow.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/dto/AdminApplyQueryRequest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/dto/AdminApplyReviewRequest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/dto/AdminApplySummary.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/dto/AdminCreateRequest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/dto/AdminDetailResponse.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/dto/AdminExportRow.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/dto/AdminModifyRequest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/dto/AdminPermissionResponse.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/dto/AdminSummary.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/dto/ApplicantInfo.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/dto/ApplyQueryRequestBase.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/dto/ButtonAuthItem.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/dto/DepartmentApplyExportRow.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/dto/DepartmentApplyQueryRequest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/dto/DepartmentApplyReviewRequest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/dto/DepartmentApplySummary.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/dto/DepartmentCancelRequest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/dto/DepartmentCreateRequest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/dto/DepartmentDetailResponse.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/dto/DepartmentExportRow.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/dto/DepartmentModifyRequest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/dto/DepartmentSummary.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/dto/LoginRequest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/dto/LoginResponse.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/dto/MenuTreeItem.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/dto/OperatorActionRequest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/dto/OperatorApplyExportRow.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/dto/OperatorApplyQueryRequest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/dto/OperatorApplyReviewRequest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/dto/OperatorApplySummary.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/dto/OperatorAssignPermissionRequest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/dto/OperatorCreateRequest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/dto/OperatorDetailResponse.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/dto/OperatorExportRow.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/dto/OperatorModifyRequest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/dto/OperatorPermissionItem.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/dto/OperatorSummary.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/dto/PermissionButtonItem.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/dto/PermissionMenuTreeItem.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/dto/PositionApplyExportRow.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/dto/PositionApplyQueryRequest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/dto/PositionApplyReviewRequest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/dto/PositionApplySummary.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/dto/PositionCancelRequest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/dto/PositionCreateRequest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/dto/PositionDetailResponse.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/dto/PositionExportRow.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/dto/PositionModifyRequest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/dto/PositionOption.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/dto/PositionScopeItem.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/dto/PositionSummary.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/dto/ScopeItem.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/dto/UserDetailBase.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/dto/UserSummary.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/filter/RequestIdFilter.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/mapper/AdminApplyMapper.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/mapper/DepartmentApplyMapper.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/mapper/DepartmentApplyScopeMapper.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/mapper/DepartmentMapper.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/mapper/DepartmentScopeMapper.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/mapper/DepartmentUserMapper.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/mapper/OperatorApplyMapper.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/mapper/OperatorApplyPositionMapper.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/mapper/PermissionMapper.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/mapper/PlatformUserMapper.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/mapper/PositionApplyMapper.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/mapper/PositionApplyScopeMapper.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/mapper/PositionMapper.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/mapper/PositionScopeMapper.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/mapper/PositionUserMapper.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/mapper/RequestLogMapper.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/model/AdminApply.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/model/ApplicantAwareApply.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/model/Department.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/model/DepartmentApply.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/model/DepartmentApplyScope.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/model/DepartmentScope.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/model/DepartmentUser.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/model/OperatorApply.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/model/OperatorApplyPosition.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/model/PlatformUser.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/model/Position.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/model/PositionApply.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/model/PositionApplyScope.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/model/PositionScope.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/model/PositionUser.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/model/RequestLog.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/model/SysButton.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/model/SysMenu.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/model/UserApplyInfo.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/service/AdminService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/service/ApplyApplicantSupport.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/service/ApplyQuerySupport.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/service/ApplyReviewSupport.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/service/ApplyReviewValidationSupport.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/service/ApplyRevokeSupport.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/service/ApplyStatusSupport.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/service/ApplyValidationSupport.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/service/AuthService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/service/CurrentLoginUser.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/service/DepartmentService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/service/LoginUserCacheService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/service/MenuService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/service/OperatorService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/service/PermissionService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/service/PositionService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/service/RequestLogService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/service/UserCreateValidationSupport.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/service/UserDetailAssembler.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/application-prod.yml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/application.yml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/logback-spring.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/mapper/AdminApplyMapper.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/mapper/DepartmentApplyMapper.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/mapper/DepartmentApplyScopeMapper.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/mapper/DepartmentMapper.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/mapper/DepartmentScopeMapper.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/mapper/DepartmentUserMapper.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/mapper/OperatorApplyMapper.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/mapper/OperatorApplyPositionMapper.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/mapper/PermissionMapper.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/mapper/PlatformUserMapper.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/mapper/PositionApplyMapper.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/mapper/PositionApplyScopeMapper.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/mapper/PositionMapper.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/mapper/PositionScopeMapper.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/mapper/PositionUserMapper.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/mapper/RequestLogMapper.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/sql/init.sql" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/sql/sys-menu-data.sql" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/static/favicon.ico" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/static/scalar.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/dto/DepartmentApplyApproveRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/logs/bulk-commodity-platform.log" beforeDir="false" afterPath="$PROJECT_DIR$/logs/bulk-commodity-platform.log" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/controller/DepartmentApplyController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/controller/DepartmentApplyController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/service/DepartmentService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/liyao/bulk/service/DepartmentService.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -220,7 +26,7 @@
     </persistenceIdMap>
   </component>
   <component name="EmbeddingIndexingInfo">
-    <option name="cachedIndexableFilesCount" value="209" />
+    <option name="cachedIndexableFilesCount" value="211" />
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -363,8 +169,17 @@
       <workItem from="1771994321065" duration="1331000" />
       <workItem from="1771996752272" duration="1510000" />
       <workItem from="1771998877874" duration="657000" />
-      <workItem from="1772000323140" duration="11783000" />
+      <workItem from="1772000323140" duration="14802000" />
     </task>
+    <task id="LOCAL-00001" summary="代码提交">
+      <option name="closed" value="true" />
+      <created>1772012643730</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1772012643730</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">

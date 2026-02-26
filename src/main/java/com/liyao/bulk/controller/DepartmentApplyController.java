@@ -33,10 +33,16 @@ public class DepartmentApplyController {
         this.departmentService = departmentService;
     }
 
-    @GetMapping
-    @Operation(summary = "查询部门申请", description = "按条件查询部门申请列表")
-    public ApiResponse<List<DepartmentApplySummary>> queryApplies(DepartmentApplyQueryRequest request) {
-        return ApiResponse.success(departmentService.queryDepartmentApplies(request));
+    @GetMapping("/pending")
+    @Operation(summary = "查询待复核部门申请", description = "状态固定为：待复核、复核拒绝、已撤销")
+    public ApiResponse<List<DepartmentApplySummary>> queryPendingApplies(DepartmentApplyQueryRequest request) {
+        return ApiResponse.success(departmentService.queryPendingDepartmentApplies(request));
+    }
+
+    @GetMapping("/reviewed")
+    @Operation(summary = "查询已复核部门申请", description = "状态固定为：复核通过")
+    public ApiResponse<List<DepartmentApplySummary>> queryReviewedApplies(DepartmentApplyQueryRequest request) {
+        return ApiResponse.success(departmentService.queryReviewedDepartmentApplies(request));
     }
 
     @GetMapping("/export")
