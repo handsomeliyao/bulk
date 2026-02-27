@@ -24,9 +24,9 @@ public class DepartmentApplyReviewRequest {
     @Schema(description = "部门备注")
     private String deptRemark;
 
-    @Schema(description = "授权范围")
-    private List<ScopeItem> authScopes;
+    @Schema(description = "授权权限")
+    private List<ButtonAuthItem> assignAuth;
 
-    @Schema(description = "操作范围")
-    private List<ScopeItem> operScopes;
+    @Schema(description = "操作权限")
+    private List<ButtonAuthItem> operAuth;
 }

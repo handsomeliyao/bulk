@@ -8,6 +8,7 @@
         <id column="id" property="id"/>
         <result column="arr_no" property="arrNo"/>
         <result column="dept_id" property="deptId"/>
+        <result column="dept_name" property="deptName"/>
         <result column="tel_phone" property="telPhone"/>
         <result column="mobile" property="mobile"/>
         <result column="remark" property="remark"/>
@@ -23,7 +24,7 @@
     </resultMap>
 
     <select id="selectById" resultMap="AdminApplyMap">
-        SELECT id, arr_no, dept_id, tel_phone, mobile, remark, oper_type, operation_type, oper_status,
+        SELECT id, arr_no, dept_id, dept_name, tel_phone, mobile, remark, oper_type, operation_type, oper_status,
                arr_oper_code, arr_oper_name, arr_date, review_oper_code, review_oper_name, review_time
         FROM admin_apply
         WHERE id = #{id}
@@ -31,10 +32,10 @@
 
     <insert id="insert" useGeneratedKeys="true" keyProperty="id">
         INSERT INTO admin_apply (
-            arr_no, dept_id, tel_phone, mobile, remark, oper_type, operation_type, oper_status,
+            arr_no, dept_id, dept_name, tel_phone, mobile, remark, oper_type, operation_type, oper_status,
             arr_oper_code, arr_oper_name, arr_date, review_oper_code, review_oper_name, review_time
         ) VALUES (
-            #{arrNo}, #{deptId}, #{telPhone}, #{mobile}, #{remark}, #{operType}, #{operationType}, #{operStatus},
+            #{arrNo}, #{deptId}, #{deptName}, #{telPhone}, #{mobile}, #{remark}, #{operType}, #{operationType}, #{operStatus},
             #{operCode}, #{operName}, #{arrDate}, #{reviewOperCode}, #{reviewOperName}, #{reviewTime}
         )
     </insert>

@@ -46,6 +46,6 @@ public class PositionDetailResponse {
     @Schema(description = "复核时间")
     private LocalDateTime reviewTime;
 
-    @Schema(description = "操作范围")
-    private List<PositionScopeItem> operScopes;
+    @Schema(description = "操作权限")
+    private List<PositionScopeItem> operAuth;
 }

@@ -15,16 +15,21 @@ import com.liyao.bulk.dto.AdminSummary;
 import com.liyao.bulk.mapper.AdminApplyMapper;
 import com.liyao.bulk.mapper.DepartmentMapper;
 import com.liyao.bulk.mapper.PlatformUserMapper;
+import com.liyao.bulk.mapper.UserButtonPermissionMapper;
 import com.liyao.bulk.model.AdminApply;
 import com.liyao.bulk.model.Department;
 import com.liyao.bulk.model.PlatformUser;
+import com.liyao.bulk.model.UserButtonPermission;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -48,21 +53,26 @@ public class AdminService {
     private static final String OP_UNFREEZE = "UNFREEZE";
     private static final String OP_RESET_PWD = "RESET_PASSWORD";
     private static final String OP_CANCEL = "CANCEL";
+    private static final String PERMISSION_TYPE_OPER = "1";
+    private static final String PERMISSION_TYPE_ASSIGN = "2";
 
     private final PlatformUserMapper platformUserMapper;
     private final DepartmentMapper departmentMapper;
     private final AdminApplyMapper adminApplyMapper;
+    private final UserButtonPermissionMapper userButtonPermissionMapper;
     private final LoginUserCacheService loginUserCacheService;
     private final String reviewMode;
 
     public AdminService(PlatformUserMapper platformUserMapper,
                         DepartmentMapper departmentMapper,
                         AdminApplyMapper adminApplyMapper,
+                        UserButtonPermissionMapper userButtonPermissionMapper,
                         LoginUserCacheService loginUserCacheService,
                         @Value("${bulk.review-mode:INPUT}") String reviewMode) {
         this.platformUserMapper = platformUserMapper;
         this.departmentMapper = departmentMapper;
         this.adminApplyMapper = adminApplyMapper;
+        this.userButtonPermissionMapper = userButtonPermissionMapper;
         this.loginUserCacheService = loginUserCacheService;
         this.reviewMode = reviewMode;
     }
@@ -79,8 +89,8 @@ public class AdminService {
         AdminPermissionResponse permissions = buildPermissions(resolvedDeptId);
         AdminDetailResponse response = new AdminDetailResponse();
         UserDetailAssembler.fillBase(response, user, resolvedDeptId, fetchDeptName(resolvedDeptId));
-        response.setAuthScopes(permissions.getAuthScopes());
-        response.setOperScopes(permissions.getOperScopes());
+        response.setAssignAuth(permissions.getAssignAuth());
+        response.setOperAuth(permissions.getOperAuth());
         return response;
     }
 
@@ -98,10 +108,11 @@ public class AdminService {
                 platformUserMapper,
                 adminApplyMapper::countPendingByOperCode,
                 request.getOperCode());
-        AdminApply apply = buildApply(resolveDeptId(request.getDeptId(), applicant),
-                resolveDeptName(request.getDeptName(), applicant), 0L,
+        Long resolvedDeptId = resolveDeptId(request.getDeptId(), applicant);
+        AdminApply apply = buildApply(resolvedDeptId, fetchDeptName(resolvedDeptId), 0L,
                 request.getOperCode(), OP_ADD, request.getRemark(), request);
         adminApplyMapper.insert(apply);
+        saveUserButtonPermissions(apply.getId(), request.getAssignAuth(), request.getOperAuth());
     }
 
     @Transactional
@@ -109,7 +120,7 @@ public class AdminService {
         CurrentLoginUser applicant = loginUserCacheService.getRequiredCurrentUser();
         PlatformUser user = requireAdmin(userId, resolveDeptId(request.getDeptId(), applicant));
         if (request.getOperName() == null || request.getOperName().trim().isEmpty()) {
-            throw new BusinessException("请填写姓名");
+            throw new BusinessException("请填写用户姓名");
         }
         if (!STATUS_NORMAL.equals(user.getOperStatus()) && !STATUS_RESET.equals(user.getOperStatus())) {
             throw new BusinessException("当前状态不允许修改");
@@ -118,12 +129,13 @@ public class AdminService {
             throw new BusinessException("已存在待复核申请");
         }
         if (!hasAdminChanges(user, request)) {
-            throw new BusinessException("未检测到变更内容");
+            throw new BusinessException("未检测到可提交的修改内容");
         }
-        AdminApply apply = buildApply(resolveDeptId(request.getDeptId(), applicant),
-                resolveDeptName(request.getDeptName(), applicant), userId,
+        Long resolvedDeptId = resolveDeptId(request.getDeptId(), applicant);
+        AdminApply apply = buildApply(resolvedDeptId, fetchDeptName(resolvedDeptId), userId,
                 user.getOperCode(), OP_MODIFY, request.getRemark(), request);
         adminApplyMapper.insert(apply);
+        replaceUserButtonPermissions(userId, request.getAssignAuth(), request.getOperAuth());
     }
 
     @Transactional
@@ -261,7 +273,7 @@ public class AdminService {
             throw new BusinessException("管理员不存在");
         }
         if (deptId != null && !Objects.equals(deptId, user.getDeptId())) {
-            throw new BusinessException("无权操作该管理员");
+            throw new BusinessException("无权限操作该管理员");
         }
         if (!USER_TYPE_DEPT_ADMIN.equals(user.getUserType())) {
             throw new BusinessException("用户类型不是管理员");
@@ -280,7 +292,13 @@ public class AdminService {
         return !Objects.equals(user.getOperName(), request.getOperName())
                 || !Objects.equals(user.getTelPhone(), request.getTelPhone())
                 || !Objects.equals(user.getPhone(), request.getPhone())
-                || !Objects.equals(user.getRemark(), request.getRemark());
+                || !Objects.equals(user.getRemark(), request.getRemark())
+                || hasPermissionData(request.getAssignAuth())
+                || hasPermissionData(request.getOperAuth());
+    }
+
+    private boolean hasPermissionData(List<String> authItems) {
+        return authItems != null && !authItems.isEmpty();
     }
 
     private void validatePendingAndSelf(PlatformUser user, CurrentLoginUser applicant,
@@ -302,6 +320,7 @@ public class AdminService {
         AdminApply apply = new AdminApply();
         apply.setArrNo(generateApplyNo());
         apply.setDeptId(deptId);
+        apply.setDeptName(deptName);
         fillContact(apply, applicantSource);
         apply.setRemark(remark);
         apply.setOperType(USER_TYPE_DEPT_ADMIN);
@@ -339,6 +358,9 @@ public class AdminService {
             user.setReviewOperName(request.getReviewOperName());
             user.setReviewTime(LocalDateTime.now());
             platformUserMapper.insert(user);
+            if (user.getId() != null && apply.getId() != null) {
+                userButtonPermissionMapper.updateUserId(apply.getId(), user.getId());
+            }
             return;
         }
         if (OP_MODIFY.equals(apply.getOperationType())) {
@@ -467,8 +489,8 @@ public class AdminService {
 
     private AdminPermissionResponse buildPermissions(Long deptId) {
         AdminPermissionResponse response = new AdminPermissionResponse();
-        response.setAuthScopes(Collections.emptyList());
-        response.setOperScopes(Collections.emptyList());
+        response.setAssignAuth(Collections.emptyList());
+        response.setOperAuth(Collections.emptyList());
         return response;
     }
 
@@ -479,6 +501,58 @@ public class AdminService {
     private String resolveDeptName(String requestDeptName, CurrentLoginUser applicant) {
         return requestDeptName != null ? requestDeptName : applicant.getApplicantDeptName();
     }
+
+    private void saveUserButtonPermissions(Long userId,
+                                           List<String> assignAuth,
+                                           List<String> operAuth) {
+        if (userId == null) {
+            return;
+        }
+        List<UserButtonPermission> items = new ArrayList<>();
+        Set<String> dedup = new LinkedHashSet<>();
+        appendUserPermissions(items, dedup, userId, operAuth, PERMISSION_TYPE_OPER);
+        appendUserPermissions(items, dedup, userId, assignAuth, PERMISSION_TYPE_ASSIGN);
+        if (!items.isEmpty()) {
+            userButtonPermissionMapper.insertBatch(items);
+        }
+    }
+
+    private void replaceUserButtonPermissions(Long userId,
+                                              List<String> assignAuth,
+                                              List<String> operAuth) {
+        if (userId == null) {
+            return;
+        }
+        userButtonPermissionMapper.deleteByUserId(userId);
+        saveUserButtonPermissions(userId, assignAuth, operAuth);
+    }
+
+    private void appendUserPermissions(List<UserButtonPermission> items,
+                                       Set<String> dedup,
+                                       Long userId,
+                                       List<String> btnIds,
+                                       String permissionType) {
+        if (btnIds == null || btnIds.isEmpty()) {
+            return;
+        }
+        for (String btnIdStr : btnIds) {
+            if (btnIdStr == null || btnIdStr.isBlank()) {
+                continue;
+            }
+            Long btnId = Long.valueOf(btnIdStr);
+            String key = permissionType + ":" + btnId;
+            if (!dedup.add(key)) {
+                continue;
+            }
+            UserButtonPermission item = new UserButtonPermission();
+            item.setUserId(userId);
+            item.setBtnId(btnId);
+            item.setPermissionType(permissionType);
+            item.setCreatedAt(LocalDateTime.now());
+            items.add(item);
+        }
+    }
 }
+
 
 

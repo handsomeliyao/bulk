@@ -5,11 +5,14 @@ import com.liyao.bulk.dto.*;
 import com.liyao.bulk.mapper.DepartmentApplyMapper;
 import com.liyao.bulk.mapper.DepartmentButtonPermissionMapper;
 import com.liyao.bulk.mapper.DepartmentMapper;
+import com.liyao.bulk.mapper.PermissionMapper;
 import com.liyao.bulk.mapper.PlatformUserMapper;
 import com.liyao.bulk.model.DepartmentButtonPermission;
 import com.liyao.bulk.model.Department;
 import com.liyao.bulk.model.DepartmentApply;
 import com.liyao.bulk.model.PlatformUser;
+import com.liyao.bulk.model.SysButton;
+import com.liyao.bulk.model.SysMenu;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,12 +20,17 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.stream.Collectors;
 
 @Service
 public class DepartmentService {
@@ -30,13 +38,12 @@ public class DepartmentService {
     private static final String STATUS_NORMAL = "NORMAL";
     private static final String STATUS_CANCELED = "CANCELED";
 
-    // 閮ㄩ棬鐢宠鐘舵€佹灇涓撅細寰呭鏍搞€佸鏍搁€氳繃銆佸鏍告嫆缁濄€佸凡鎾ら攢
     private static final String APPLY_PENDING = "PENDING";
     private static final String APPLY_APPROVED = "APPROVED";
     private static final String APPLY_REJECTED = "REJECTED";
     private static final String APPLY_CANCELED = "CANCELED";
 
-    // 寰呭鏍稿垎椤靛彲鏌ヨ鐘舵€侊細寰呭鏍搞€佸鏍搁€氳繃銆佸鏍告嫆缁濄€佸凡鎾ら攢
+    // 部门申请状态分组
     private static final List<String> DEPARTMENT_PENDING_STATUSES = List.of(
             APPLY_PENDING,
             APPLY_REJECTED,
@@ -55,23 +62,52 @@ public class DepartmentService {
     private final DepartmentMapper departmentMapper;
     private final DepartmentApplyMapper departmentApplyMapper;
     private final DepartmentButtonPermissionMapper departmentButtonPermissionMapper;
+    private final PermissionMapper permissionMapper;
     private final PlatformUserMapper platformUserMapper;
     private final LoginUserCacheService loginUserCacheService;
 
     public DepartmentService(DepartmentMapper departmentMapper,
                              DepartmentApplyMapper departmentApplyMapper,
                              DepartmentButtonPermissionMapper departmentButtonPermissionMapper,
+                             PermissionMapper permissionMapper,
                              PlatformUserMapper platformUserMapper,
                              LoginUserCacheService loginUserCacheService) {
         this.departmentMapper = departmentMapper;
         this.departmentApplyMapper = departmentApplyMapper;
         this.departmentButtonPermissionMapper = departmentButtonPermissionMapper;
+        this.permissionMapper = permissionMapper;
         this.platformUserMapper = platformUserMapper;
         this.loginUserCacheService = loginUserCacheService;
     }
 
-    public List<DepartmentSummary> queryDepartments(String name, String status) {
-        List<Department> departments = departmentMapper.selectByCondition(name, status);
+    public PageResult<DepartmentSummary> queryDepartments(String name, String status,
+                                                          Integer pageNum, Integer pageSize) {
+        int safePageNum = pageNum == null || pageNum <= 0 ? 1 : pageNum;
+        int safePageSize = pageSize == null || pageSize <= 0 ? 10 : pageSize;
+        int offset = (safePageNum - 1) * safePageSize;
+
+        long total = departmentMapper.countByCondition(name, status);
+        List<DepartmentSummary> list = queryDepartmentsAll(name, status, offset, safePageSize);
+
+        PageResult<DepartmentSummary> result = new PageResult<>();
+        result.setTotal(total);
+        result.setPageNum(safePageNum);
+        result.setPageSize(safePageSize);
+        result.setList(list);
+        return result;
+    }
+
+    public List<DepartmentOption> queryNormalDepartments() {
+        return departmentMapper.selectByCondition(null, STATUS_NORMAL).stream().map(department -> {
+            DepartmentOption option = new DepartmentOption();
+            option.setId(department.getId());
+            option.setDeptName(department.getDeptName());
+            return option;
+        }).toList();
+    }
+
+    private List<DepartmentSummary> queryDepartmentsAll(String name, String status, int offset, int limit) {
+        List<Department> departments = departmentMapper.selectPageByCondition(name, status, offset, limit);
         return departments.stream().map(department -> {
             DepartmentSummary summary = toSummary(department);
             fillDepartmentAuth(summary, department.getId());
@@ -95,8 +131,6 @@ public class DepartmentService {
         response.setUpdatedAt(department.getUpdatedAt());
         response.setReviewOperName(department.getReviewOperName());
         response.setReviewTime(department.getReviewTime());
-        response.setAuthScopes(Collections.emptyList());
-        response.setOperScopes(Collections.emptyList());
         DepartmentAuth auth = resolveDepartmentAuth(department.getId());
         response.setAssignAuth(auth.assignAuth());
         response.setOperAuth(auth.operAuth());
@@ -108,12 +142,41 @@ public class DepartmentService {
         return users.stream().map(this::toUserSummary).toList();
     }
 
+    public List<PermissionMenuTreeItem> queryDepartmentOperPermissionTree(Long deptId) {
+        return queryDepartmentPermissionTreeByType(deptId, PERMISSION_TYPE_OPER);
+    }
+
+    public List<PermissionMenuTreeItem> queryDepartmentAssignPermissionTree(Long deptId) {
+        return queryDepartmentPermissionTreeByType(deptId, PERMISSION_TYPE_ASSIGN);
+    }
+
+    private List<PermissionMenuTreeItem> queryDepartmentPermissionTreeByType(Long deptId, String permissionType) {
+        requireDepartment(deptId);
+        DepartmentAuth auth = resolveDepartmentAuth(deptId);
+        List<ButtonAuthItem> source = PERMISSION_TYPE_OPER.equals(permissionType) ? auth.operAuth() : auth.assignAuth();
+        Set<Long> selectedButtonIds = source.stream()
+                .map(ButtonAuthItem::getBtnId)
+                .filter(Objects::nonNull)
+                .collect(Collectors.toSet());
+
+        List<SysMenu> menus = permissionMapper.selectAllMenus();
+        List<SysButton> buttons = permissionMapper.selectAllButtons();
+        Map<Long, List<PermissionButtonItem>> buttonMap = buttons.stream()
+                .map(this::toPermissionButtonItem)
+                .collect(Collectors.groupingBy(
+                        PermissionButtonItem::getMenuId,
+                        LinkedHashMap::new,
+                        Collectors.toList()));
+
+        return buildPermissionTree(menus, buttonMap, selectedButtonIds);
+    }
+
     @Transactional
     public void createDepartmentApply(DepartmentCreateRequest request) {
         validateDepartmentRequest(request.getDeptName());
         CurrentLoginUser applicant = loginUserCacheService.getRequiredCurrentUser();
         if (departmentApplyMapper.countPendingByDeptName(request.getDeptName()) > 0) {
-            throw new BusinessException("已存在待复核申请");
+            throw new BusinessException("同一部门存在待复核申请，不允许重复发起");
         }
         Department existing = departmentMapper.selectByName(request.getDeptName());
         if (existing != null) {
@@ -123,7 +186,7 @@ public class DepartmentService {
                 STATUS_NORMAL, OP_ADD, applicant);
         departmentApplyMapper.insert(apply);
         if (apply.getId() == null) {
-            throw new BusinessException("申请记录新增后未生成申请ID");
+            throw new BusinessException("申请保存失败，未返回申请ID");
         }
         departmentApplyMapper.updateDeptId(apply.getId(), apply.getId());
         apply.setDeptId(apply.getId());
@@ -139,14 +202,14 @@ public class DepartmentService {
             throw new BusinessException("当前部门状态不允许修改");
         }
         if (departmentApplyMapper.countPendingByDeptId(deptId) > 0) {
-            throw new BusinessException("已存在待复核申请");
+            throw new BusinessException("同一部门存在待复核申请，不允许重复发起");
         }
         Department existing = departmentMapper.selectByName(request.getDeptName());
         if (existing != null && !existing.getId().equals(deptId)) {
             throw new BusinessException("部门名称已存在");
         }
         if (!hasDepartmentChanges(department, request)) {
-            throw new BusinessException("未检测到变更内容");
+            throw new BusinessException("未检测到可提交的修改内容");
         }
         DepartmentApply apply = buildApply(request.getDeptName(), request.getRemark(), deptId, department.getDeptStatus(), OP_MODIFY, applicant);
         departmentApplyMapper.insert(apply);
@@ -160,7 +223,7 @@ public class DepartmentService {
             throw new BusinessException("当前部门状态不允许注销");
         }
         if (departmentApplyMapper.countPendingByDeptId(deptId) > 0) {
-            throw new BusinessException("已存在待复核申请");
+            throw new BusinessException("同一部门存在待复核申请，不允许重复发起");
         }
         DepartmentApply apply = new DepartmentApply();
         apply.setArrNo(generateApplyNo());
@@ -168,7 +231,7 @@ public class DepartmentService {
         apply.setDeptName(department.getDeptName());
         apply.setRemark(department.getRemark());
         apply.setOperType(OP_CANCEL);
-        // 鐢宠鍒涘缓鏃堕粯璁ょ姸鎬侊細寰呭鏍?        apply.setOperStatus(APPLY_PENDING);
+        apply.setOperStatus(APPLY_PENDING);
         apply.setDeptStatus(department.getDeptStatus());
         fillApplicantInfo(apply, applicant);
         departmentApplyMapper.insert(apply);
@@ -228,16 +291,16 @@ public class DepartmentService {
     @Transactional
     public void reviewApply(DepartmentApplyApproveRequest request) {
         if (request == null || request.getApplyId() == null) {
-            throw new BusinessException("申请ID不能为空");
+            throw new BusinessException("复核参数applyId不能为空");
         }
         CurrentLoginUser reviewer = loginUserCacheService.getRequiredCurrentUser();
         DepartmentApply apply = requireApply(request.getApplyId());
         Long applyDeptId = apply.getDeptId();
         if (!APPLY_PENDING.equals(apply.getOperStatus())) {
-            throw new BusinessException("仅待复核申请可执行复核");
+            throw new BusinessException("当前申请状态不是待复核，无法处理");
         }
         if (Objects.equals(apply.getOperCode(), reviewer.getLoginOperCode())) {
-            throw new BusinessException("不能复核自己提交的申请");
+            throw new BusinessException("申请人与复核人不能为同一人");
         }
         boolean approved = request.getApproved() == null || request.getApproved();
         if (!approved) {
@@ -254,14 +317,14 @@ public class DepartmentService {
         if (!OP_ADD.equals(apply.getOperType())
                 && !OP_MODIFY.equals(apply.getOperType())
                 && !OP_CANCEL.equals(apply.getOperType())) {
-            throw new BusinessException("仅支持新增/修改/注销类型申请通过复核");
+            throw new BusinessException("仅支持新增/修改/注销申请的通过复核");
         }
 
         if (OP_ADD.equals(apply.getOperType())) {
             validateDepartmentRequest(request.getDeptName());
             if (!Objects.equals(apply.getDeptName(), request.getDeptName())
                     || !Objects.equals(apply.getRemark(), request.getRemark())) {
-                throw new BusinessException("复核数据与申请数据不一致");
+                throw new BusinessException("复核通过时提交内容与申请内容不一致");
             }
             Department department = new Department();
             department.setDeptName(request.getDeptName());
@@ -286,7 +349,7 @@ public class DepartmentService {
             validateDepartmentRequest(request.getDeptName());
             if (!Objects.equals(apply.getDeptName(), request.getDeptName())
                     || !Objects.equals(apply.getRemark(), request.getRemark())) {
-                throw new BusinessException("复核数据与申请数据不一致");
+                throw new BusinessException("复核通过时提交内容与申请内容不一致");
             }
             Department department = requireDepartment(apply.getDeptId());
             department.setDeptName(request.getDeptName());
@@ -318,7 +381,8 @@ public class DepartmentService {
     }
 
     public List<DepartmentExportRow> buildDepartmentExport(String name, String status) {
-        return queryDepartments(name, status).stream().map(item -> {
+        return departmentMapper.selectByCondition(name, status).stream().map(this::toSummary).map(item -> {
+            fillDepartmentAuth(item, item.getId());
             DepartmentExportRow row = new DepartmentExportRow();
             row.setId(item.getId());
             row.setDeptName(item.getDeptName());
@@ -354,8 +418,9 @@ public class DepartmentService {
                                                                            List<String> statuses) {
         LocalDateTime startTime = parseStartTime(request.getStartDate());
         LocalDateTime endTime = parseEndTime(request.getEndDate());
+        List<String> effectiveStatuses = resolveApplyStatusesForQuery(request, statuses);
         return departmentApplyMapper.selectByCondition(
-                statuses,
+                effectiveStatuses,
                 startTime,
                 endTime,
                 request.getArrNo(),
@@ -364,11 +429,36 @@ public class DepartmentService {
         );
     }
 
+    private List<String> resolveApplyStatusesForQuery(DepartmentApplyQueryRequest request, List<String> defaultStatuses) {
+        if (request == null) {
+            return defaultStatuses;
+        }
+        String requested = request.getArrStatus();
+        if (requested == null) {
+            return defaultStatuses;
+        }
+        String normalized = requested.trim().toUpperCase();
+        if (defaultStatuses.contains(normalized)) {
+            return List.of(normalized);
+        }
+        // 鍏滃簳锛氳繑鍥炰竴涓笉浼氬懡涓殑鐘舵€侊紝閬垮厤璇煡鍏ㄩ噺鏁版嵁
+        return List.of("__NO_MATCH_STATUS__");
+    }
+    private String firstNonBlank(String first, String second) {
+        if (first != null && !first.isBlank()) {
+            return first;
+        }
+        if (second != null && !second.isBlank()) {
+            return second;
+        }
+        return null;
+    }
+
     private void saveDeptButtonPermissions(Long deptId,
                                            List<ButtonAuthItem> assignAuth,
                                            List<ButtonAuthItem> operAuth) {
         if (deptId == null) {
-            throw new BusinessException("保存权限时部门ID不能为空");
+            throw new BusinessException("部门ID不能为空，无法保存权限");
         }
         List<DepartmentButtonPermission> items = new java.util.ArrayList<>();
         Set<String> dedup = new LinkedHashSet<>();
@@ -383,7 +473,7 @@ public class DepartmentService {
                                               List<ButtonAuthItem> assignAuth,
                                               List<ButtonAuthItem> operAuth) {
         if (deptId == null) {
-            throw new BusinessException("保存权限时部门ID不能为空");
+            throw new BusinessException("部门ID不能为空，无法保存权限");
         }
         departmentButtonPermissionMapper.deleteByDeptId(deptId);
         saveDeptButtonPermissions(deptId, assignAuth, operAuth);
@@ -423,7 +513,7 @@ public class DepartmentService {
         apply.setDeptName(name);
         apply.setRemark(remark);
         apply.setOperType(operationType);
-        // 鐢宠鍒涘缓鏃堕粯璁ょ姸鎬侊細寰呭鏍?        apply.setOperStatus(APPLY_PENDING);
+        apply.setOperStatus(APPLY_PENDING);
         apply.setDeptStatus(deptStatus);
         fillApplicantInfo(apply, applicant);
         return apply;
@@ -475,6 +565,100 @@ public class DepartmentService {
         DepartmentAuth auth = resolveDepartmentAuth(deptId);
         summary.setAssignAuth(auth.assignAuth());
         summary.setOperAuth(auth.operAuth());
+    }
+
+    private List<PermissionMenuTreeItem> buildPermissionTree(List<SysMenu> menus,
+                                                             Map<Long, List<PermissionButtonItem>> buttonMap,
+                                                             Set<Long> selectedButtonIds) {
+        if (menus == null || menus.isEmpty() || selectedButtonIds == null || selectedButtonIds.isEmpty()) {
+            return Collections.emptyList();
+        }
+        Map<Long, PermissionMenuTreeItem> nodeMap = new LinkedHashMap<>();
+        for (SysMenu menu : menus) {
+            PermissionMenuTreeItem node = new PermissionMenuTreeItem();
+            node.setId(menu.getId());
+            node.setPid(menu.getPid());
+            node.setMenuCode(menu.getMenuCode());
+            node.setMenuName(menu.getMenuName());
+            node.setMenuOrder(menu.getMenuOrder());
+            node.setIcon(menu.getIcon());
+            node.setUrl(menu.getUrl());
+            List<PermissionButtonItem> selectedButtons = buttonMap
+                    .getOrDefault(menu.getId(), Collections.emptyList())
+                    .stream()
+                    .filter(item -> selectedButtonIds.contains(item.getId()))
+                    .toList();
+            // Backward compatibility: some historical records store menu ids in dept_btn.btn_id.
+            // If current menu is selected by id and no explicit button ids are found, include all menu buttons.
+            if (selectedButtons.isEmpty() && selectedButtonIds.contains(menu.getId())) {
+                selectedButtons = buttonMap.getOrDefault(menu.getId(), Collections.emptyList());
+            }
+            node.setButtons(selectedButtons.isEmpty() ? null : selectedButtons);
+            node.setChildren(new ArrayList<>());
+            nodeMap.put(menu.getId(), node);
+        }
+
+        List<PermissionMenuTreeItem> roots = new ArrayList<>();
+        for (PermissionMenuTreeItem node : nodeMap.values()) {
+            Long pid = node.getPid();
+            if (pid == null || pid == 0L) {
+                roots.add(node);
+                continue;
+            }
+            PermissionMenuTreeItem parent = nodeMap.get(pid);
+            if (parent == null) {
+                roots.add(node);
+            } else {
+                parent.getChildren().add(node);
+            }
+        }
+
+        pruneEmptyMenuNodes(roots);
+        sortPermissionTree(roots);
+        return roots;
+    }
+
+    private void pruneEmptyMenuNodes(List<PermissionMenuTreeItem> nodes) {
+        if (nodes == null || nodes.isEmpty()) {
+            return;
+        }
+        java.util.Iterator<PermissionMenuTreeItem> iterator = nodes.iterator();
+        while (iterator.hasNext()) {
+            PermissionMenuTreeItem node = iterator.next();
+            pruneEmptyMenuNodes(node.getChildren());
+            boolean hasChildren = node.getChildren() != null && !node.getChildren().isEmpty();
+            boolean hasButtons = node.getButtons() != null && !node.getButtons().isEmpty();
+            if (!hasChildren && !hasButtons) {
+                iterator.remove();
+                continue;
+            }
+            if (hasChildren) {
+                node.setButtons(null);
+            }
+        }
+    }
+
+    private void sortPermissionTree(List<PermissionMenuTreeItem> nodes) {
+        if (nodes == null || nodes.isEmpty()) {
+            return;
+        }
+        nodes.sort(Comparator
+                .comparing(PermissionMenuTreeItem::getMenuOrder, Comparator.nullsLast(Integer::compareTo))
+                .thenComparing(PermissionMenuTreeItem::getId));
+        for (PermissionMenuTreeItem node : nodes) {
+            sortPermissionTree(node.getChildren());
+        }
+    }
+
+    private PermissionButtonItem toPermissionButtonItem(SysButton button) {
+        PermissionButtonItem item = new PermissionButtonItem();
+        item.setId(button.getId());
+        item.setMenuId(button.getMenuId());
+        item.setBtnCode(button.getBtnCode());
+        item.setBtnName(button.getBtnName());
+        item.setMethod(button.getMethod());
+        item.setUri(button.getUri());
+        return item;
     }
 
     private DepartmentAuth resolveDepartmentAuth(Long deptId) {
@@ -547,4 +731,6 @@ public class DepartmentService {
         return timestamp + random;
     }
 }
+
+
 

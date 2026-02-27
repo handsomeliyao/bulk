@@ -8,6 +8,7 @@ public class AdminApply implements ApplicantAwareApply {
     private Long id;
     private String arrNo;
     private Long deptId;
+    private String deptName;
     private String operType;
     private String telPhone;
     private String mobile;

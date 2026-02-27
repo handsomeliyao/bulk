@@ -5,8 +5,8 @@ import lombok.Data;
 
 @Data
 public class DepartmentApplyQueryRequest {
-    @Schema(description = "申请状态类型")
-    private String statusType;
+    @Schema(description = "申请状态")
+    private String arrStatus;
 
     @Schema(description = "开始日期")
     private String startDate;

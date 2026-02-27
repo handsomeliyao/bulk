@@ -18,6 +18,6 @@ public class PositionCreateRequest {
     @Schema(description = "备注")
     private String remark;
 
-    @Schema(description = "操作范围")
-    private List<PositionScopeItem> operScopes;
+    @Schema(description = "操作权限")
+    private List<PositionScopeItem> operAuth;
 }

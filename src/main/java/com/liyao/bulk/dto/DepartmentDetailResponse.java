@@ -37,12 +37,6 @@ public class DepartmentDetailResponse {
     @Schema(description = "复核时间")
     private LocalDateTime reviewTime;
 
-    @Schema(description = "授权范围(兼容旧字段)")
-    private List<ScopeItem> authScopes;
-
-    @Schema(description = "操作范围(兼容旧字段)")
-    private List<ScopeItem> operScopes;
-
     @Schema(description = "授权权限")
     private List<ButtonAuthItem> assignAuth;
 

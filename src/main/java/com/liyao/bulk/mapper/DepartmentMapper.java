@@ -11,6 +11,14 @@ public interface DepartmentMapper {
     List<Department> selectByCondition(@Param("name") String name,
                                        @Param("status") String status);
 
+    long countByCondition(@Param("name") String name,
+                          @Param("status") String status);
+
+    List<Department> selectPageByCondition(@Param("name") String name,
+                                           @Param("status") String status,
+                                           @Param("offset") int offset,
+                                           @Param("limit") int limit);
+
     Department selectById(@Param("id") Long id);
 
     Department selectByName(@Param("name") String name);

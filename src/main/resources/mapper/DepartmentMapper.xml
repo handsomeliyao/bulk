@@ -33,6 +33,36 @@
         ORDER BY id ASC
     </select>
 
+    <select id="countByCondition" resultType="long">
+        SELECT COUNT(1)
+        FROM department
+        <where>
+            <if test="name != null and name != ''">
+                AND dept_name LIKE CONCAT('%', #{name}, '%')
+            </if>
+            <if test="status != null and status != ''">
+                AND dept_status = #{status}
+            </if>
+        </where>
+    </select>
+
+    <select id="selectPageByCondition" resultMap="DepartmentMap">
+        SELECT id, dept_name, remark, dept_status,
+               created_oper_name, created_at, updated_oper_name, updated_at,
+               review_oper_name, review_time
+        FROM department
+        <where>
+            <if test="name != null and name != ''">
+                AND dept_name LIKE CONCAT('%', #{name}, '%')
+            </if>
+            <if test="status != null and status != ''">
+                AND dept_status = #{status}
+            </if>
+        </where>
+        ORDER BY id ASC
+        LIMIT #{limit} OFFSET #{offset}
+    </select>
+
     <select id="selectById" resultMap="DepartmentMap">
         SELECT id, dept_name, remark, dept_status,
                created_oper_name, created_at, updated_oper_name, updated_at,

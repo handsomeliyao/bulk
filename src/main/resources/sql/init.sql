@@ -1,4 +1,4 @@
-﻿DROP TABLE IF EXISTS `department`;
+DROP TABLE IF EXISTS `department`;
 CREATE TABLE `department`
 (
     `id`         bigint                                                        NOT NULL AUTO_INCREMENT COMMENT '主键',
@@ -23,7 +23,7 @@ CREATE TABLE `user`
     `id`          bigint                                                        NOT NULL AUTO_INCREMENT COMMENT '主键',
     `oper_code`   varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci  NOT NULL COMMENT '用户名',
     `oper_name`   varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '用户姓名',
-    `oper_status` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci  NOT NULL COMMENT '状态',
+    `oper_status` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci  NOT NULL COMMENT '用户状态（NORMAL-正常，FROZEN-冻结，CANCELED-注销，RESET-密码重置）',
     `phone`       varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci  DEFAULT NULL COMMENT '电话',
     `created_oper_name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '创建人',
     `created_at`  datetime                                                      NOT NULL COMMENT '创建时间',
@@ -48,6 +48,39 @@ INSERT IGNORE INTO `user` (`oper_code`, `oper_name`, `oper_status`, `phone`, `cr
 VALUES ('TSTADM0001', '测试管理员', 'NORMAL', NULL, 'system',
         NOW(), NULL, NULL, NULL,
         NULL, 'ADMIN', NULL, 'seed admin', '123456', NULL);
+
+DROP TABLE IF EXISTS `user_apply`;
+CREATE TABLE `user_apply`
+(
+    `id`               bigint                                                        NOT NULL AUTO_INCREMENT COMMENT '主键',
+    `arr_no`           varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci  NOT NULL COMMENT '申请单号',
+    `user_id`          bigint                                                        DEFAULT NULL COMMENT '用户ID（正式表user.id）',
+    `oper_code`        varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci  NOT NULL COMMENT '用户编码（申请数据）',
+    `oper_name`        varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '用户姓名（申请数据）',
+    `user_type`        varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci  NOT NULL COMMENT '用户类型（ADMIN-管理员，OPERATOR-操作员）',
+    `dept_id`          bigint                                                        DEFAULT NULL COMMENT '部门ID',
+    `oper_status`      varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci  NOT NULL COMMENT '用户状态（NORMAL-正常，FROZEN-冻结，CANCELED-注销，RESET-密码重置）',
+    `phone`            varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci  DEFAULT NULL COMMENT '电话',
+    `tel_phone`        varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci  DEFAULT NULL COMMENT '办公电话',
+    `remark`           varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '备注',
+    `password`         varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci  DEFAULT NULL COMMENT '用户密码',
+    `operation_type`   varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci  NOT NULL COMMENT '操作类型',
+    `arr_status`       varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci  NOT NULL COMMENT '申请状态',
+    `arr_oper_code`    varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci  NOT NULL COMMENT '申请人编码',
+    `arr_oper_name`    varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '申请人姓名',
+    `arr_date`         datetime                                                      NOT NULL COMMENT '申请时间',
+    `review_oper_code` bigint                                                        DEFAULT NULL COMMENT '审核人ID',
+    `review_oper_name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '审核人姓名',
+    `review_time`      datetime                                                      DEFAULT NULL COMMENT '审核时间',
+    PRIMARY KEY (`id`),
+    UNIQUE KEY `uk_user_apply_no` (`arr_no`),
+    KEY `idx_user_apply_user` (`user_id`),
+    KEY `idx_user_apply_type` (`user_type`),
+    KEY `idx_user_apply_status` (`arr_status`),
+    KEY `idx_user_apply_time` (`arr_date`)
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4
+  COLLATE = utf8mb4_0900_ai_ci COMMENT ='用户申请表';
 
 
 DROP TABLE IF EXISTS `department_apply`;
@@ -150,7 +183,7 @@ CREATE TABLE `operator_apply`
     `mobile`           varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci  DEFAULT NULL COMMENT '手机号码',
     `remark`           varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '备注',
     `oper_type`        varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci  NOT NULL COMMENT '操作类型',
-    `oper_status`      varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci  NOT NULL COMMENT '状态',
+    `oper_status`      varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci  NOT NULL COMMENT '用户状态（NORMAL-正常，FROZEN-冻结，CANCELED-注销，RESET-密码重置）',
     `arr_oper_code`        bigint                                                        NOT NULL COMMENT '申请人ID',
     `arr_oper_name`        varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '申请人姓名',
     `arr_date`         datetime                                                      NOT NULL COMMENT '申请时间',
@@ -176,10 +209,11 @@ CREATE TABLE `admin_apply`
     `mobile`           varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci  DEFAULT NULL COMMENT '手机号码',
     `remark`           varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '备注',
     `operation_type`   varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci  NOT NULL COMMENT '操作类型',
-    `oper_status`      varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci  NOT NULL COMMENT '状态',
+    `oper_status`      varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci  NOT NULL COMMENT '用户状态（NORMAL-正常，FROZEN-冻结，CANCELED-注销，RESET-密码重置）',
     `arr_oper_code`        bigint                                                        NOT NULL COMMENT '申请人ID',
     `arr_oper_name`        varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '申请人姓名',
     `dept_id`          bigint                                                        DEFAULT NULL COMMENT '申请人部门ID',
+    `dept_name`        varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '部门名称',
     `arr_date`         datetime                                                      NOT NULL COMMENT '申请时间',
     `review_oper_code` bigint                                                        DEFAULT NULL COMMENT '审核人ID',
     `review_oper_name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '审核人姓名',
@@ -245,6 +279,20 @@ CREATE TABLE `dept_btn`
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4
   COLLATE = utf8mb4_0900_ai_ci COMMENT ='部门菜单按钮关系';
+
+DROP TABLE IF EXISTS `user_btn`;
+CREATE TABLE `user_btn`
+(
+    `id`              bigint   NOT NULL AUTO_INCREMENT COMMENT '主键',
+    `user_id`         bigint   NOT NULL COMMENT '用户ID',
+    `btn_id`          bigint   NOT NULL COMMENT '按钮ID',
+    `permission_type` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '权限类型，1-操作权限，2-授权权限',
+    `created_at`      datetime NOT NULL COMMENT '创建时间',
+    PRIMARY KEY (`id`),
+    UNIQUE KEY `uk_user_menu_btn` (`user_id`, `btn_id`)
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4
+  COLLATE = utf8mb4_0900_ai_ci COMMENT ='用户菜单按钮关系';
 
 DROP TABLE IF EXISTS `sys_button`;
 CREATE TABLE `sys_button`

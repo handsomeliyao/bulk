@@ -70,7 +70,7 @@ public class ApplyCompareService {
         Department formal = (OP_MODIFY.equals(operationType) || OP_CANCEL.equals(operationType))
                 ? departmentMapper.selectById(apply.getDeptId()) : null;
         if ((OP_MODIFY.equals(operationType) || OP_CANCEL.equals(operationType)) && formal == null) {
-            throw new BusinessException("部门不存在");
+            throw new BusinessException("正式部门不存在");
         }
 
         DepartmentDetailResponse response = new DepartmentDetailResponse();
@@ -84,8 +84,6 @@ public class ApplyCompareService {
         response.setUpdatedAt(null);
         response.setReviewOperName(null);
         response.setReviewTime(null);
-        response.setAuthScopes(Collections.emptyList());
-        response.setOperScopes(Collections.emptyList());
         if (formal == null) {
             response.setAssignAuth(null);
             response.setOperAuth(null);
@@ -123,7 +121,7 @@ public class ApplyCompareService {
         response.setUpdatedAt(null);
         response.setReviewOperName(null);
         response.setReviewTime(null);
-        response.setOperScopes(Collections.emptyList());
+        response.setOperAuth(Collections.emptyList());
         return response;
     }
 
@@ -136,7 +134,7 @@ public class ApplyCompareService {
         PlatformUser formal = (OP_MODIFY.equals(operationType) || OP_CANCEL.equals(operationType))
                 ? platformUserMapper.selectById(apply.getOperCode()) : null;
         if ((OP_MODIFY.equals(operationType) || OP_CANCEL.equals(operationType)) && formal == null) {
-            throw new BusinessException("管理员不存在");
+            throw new BusinessException("正式管理员不存在");
         }
 
         AdminDetailResponse response = new AdminDetailResponse();
@@ -156,8 +154,8 @@ public class ApplyCompareService {
         response.setUpdatedAt(null);
         response.setReviewOperName(null);
         response.setReviewTime(null);
-        response.setAuthScopes(Collections.emptyList());
-        response.setOperScopes(Collections.emptyList());
+        response.setAssignAuth(Collections.emptyList());
+        response.setOperAuth(Collections.emptyList());
         return response;
     }
 
@@ -170,7 +168,7 @@ public class ApplyCompareService {
         PlatformUser formal = (OP_MODIFY.equals(operationType) || OP_CANCEL.equals(operationType))
                 ? platformUserMapper.selectById(apply.getOperCode()) : null;
         if ((OP_MODIFY.equals(operationType) || OP_CANCEL.equals(operationType)) && formal == null) {
-            throw new BusinessException("操作员不存在");
+            throw new BusinessException("正式操作员不存在");
         }
 
         OperatorDetailResponse response = new OperatorDetailResponse();
@@ -261,4 +259,6 @@ public class ApplyCompareService {
         }
     }
 }
+
+
 

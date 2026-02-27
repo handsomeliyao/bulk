@@ -9,7 +9,10 @@ import com.liyao.bulk.dto.DepartmentCreateRequest;
 import com.liyao.bulk.dto.DepartmentDetailResponse;
 import com.liyao.bulk.dto.DepartmentExportRow;
 import com.liyao.bulk.dto.DepartmentModifyRequest;
+import com.liyao.bulk.dto.DepartmentOption;
 import com.liyao.bulk.dto.DepartmentSummary;
+import com.liyao.bulk.dto.PageResult;
+import com.liyao.bulk.dto.PermissionMenuTreeItem;
 import com.liyao.bulk.dto.UserSummary;
 import com.liyao.bulk.service.DepartmentService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -41,11 +44,19 @@ public class DepartmentController {
     }
 
     @GetMapping
-    @Operation(summary = "查询部门", description = "按条件查询部门列表")
-    public ApiResponse<List<DepartmentSummary>> queryDepartments(
+    @Operation(summary = "查询部门", description = "按条件查询部门列表，支持分页")
+    public ApiResponse<PageResult<DepartmentSummary>> queryDepartments(
             @Parameter(description = "部门名称") @RequestParam(required = false) String deptName,
-            @Parameter(description = "部门状态") @RequestParam(required = false) String deptStatus) {
-        return ApiResponse.success(departmentService.queryDepartments(deptName, deptStatus));
+            @Parameter(description = "部门状态") @RequestParam(required = false) String deptStatus,
+            @Parameter(description = "页码，默认1") @RequestParam(required = false) Integer pageNum,
+            @Parameter(description = "每页条数，默认10") @RequestParam(required = false) Integer pageSize) {
+        return ApiResponse.success(departmentService.queryDepartments(deptName, deptStatus, pageNum, pageSize));
+    }
+
+    @GetMapping("/normal")
+    @Operation(summary = "查询正常状态部门", description = "查询所有状态为NORMAL的部门信息")
+    public ApiResponse<List<DepartmentOption>> queryNormalDepartments() {
+        return ApiResponse.success(departmentService.queryNormalDepartments());
     }
 
     @GetMapping("/{id}")
@@ -61,7 +72,33 @@ public class DepartmentController {
             @Parameter(description = "部门ID") @PathVariable Long id) {
         return ApiResponse.success(departmentService.queryDepartmentUsers(id));
     }
+    @GetMapping("/{id}/permissions/oper/tree")
+    @Operation(summary = "查询部门操作权限树", description = "根据部门ID查询当前部门操作权限树（菜单+按钮）")
+    public ApiResponse<List<PermissionMenuTreeItem>> queryDepartmentOperPermissionTree(
+            @Parameter(description = "部门ID") @PathVariable String id,
+            @Parameter(description = "部门ID(兼容query)") @RequestParam(required = false) Long queryId) {
+        return ApiResponse.success(departmentService.queryDepartmentOperPermissionTree(resolveDeptId(id, queryId)));
+    }
+    @GetMapping("/permissions/oper/tree")
+    @Operation(summary = "查询部门操作权限树(兼容)", description = "根据部门ID查询当前部门操作权限树（query参数方式）")
+    public ApiResponse<List<PermissionMenuTreeItem>> queryDepartmentOperPermissionTreeByQuery(
+            @Parameter(description = "部门ID") @RequestParam Long id) {
+        return ApiResponse.success(departmentService.queryDepartmentOperPermissionTree(id));
+    }
 
+    @GetMapping("/{id}/permissions/assign/tree")
+    @Operation(summary = "查询部门授权权限树", description = "根据部门ID查询当前部门授权权限树（菜单+按钮）")
+    public ApiResponse<List<PermissionMenuTreeItem>> queryDepartmentAssignPermissionTree(
+            @Parameter(description = "部门ID") @PathVariable String id,
+            @Parameter(description = "部门ID(兼容query)") @RequestParam(required = false) Long queryId) {
+        return ApiResponse.success(departmentService.queryDepartmentAssignPermissionTree(resolveDeptId(id, queryId)));
+    }
+    @GetMapping("/permissions/assign/tree")
+    @Operation(summary = "查询部门授权权限树(兼容)", description = "根据部门ID查询当前部门授权权限树（query参数方式）")
+    public ApiResponse<List<PermissionMenuTreeItem>> queryDepartmentAssignPermissionTreeByQuery(
+            @Parameter(description = "部门ID") @RequestParam Long id) {
+        return ApiResponse.success(departmentService.queryDepartmentAssignPermissionTree(id));
+    }
     @GetMapping("/export")
     @Operation(summary = "导出部门", description = "导出部门查询结果")
     public ResponseEntity<StreamingResponseBody> exportDepartments(
@@ -105,5 +142,22 @@ public class DepartmentController {
                                               @RequestBody(required = false) DepartmentCancelRequest request) {
         departmentService.cancelDepartmentApply(id);
         return ApiResponse.success();
+    }
+
+    private Long resolveDeptId(String pathId, Long queryId) {
+        if (pathId != null) {
+            String trimmed = pathId.trim();
+            if (!trimmed.isEmpty() && !"{id}".equals(trimmed)) {
+                try {
+                    return Long.parseLong(trimmed);
+                } catch (NumberFormatException ignored) {
+                    // fallback to query parameter
+                }
+            }
+        }
+        if (queryId != null) {
+            return queryId;
+        }
+        throw new IllegalArgumentException("请求参数[id]格式不正确");
     }
 }
